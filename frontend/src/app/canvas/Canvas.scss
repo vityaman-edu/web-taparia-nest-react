@@ -1,0 +1,15 @@
+@use '../../common';
+
+.Canvas {
+  margin: 2%;
+}
+
+#battlefield {
+    background-color: white;
+    padding: auto 0;
+    margin-left: auto;
+    margin-right: auto;
+    cursor: crosshair;
+    display: block;
+    border: 2px solid black;
+}

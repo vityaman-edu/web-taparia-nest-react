@@ -5,11 +5,10 @@ module.exports = {
     ],
     parser: '@typescript-eslint/parser',
     plugins: [
-        '@typescript-eslint',
-        'prettier'
+        '@typescript-eslint'
     ],
     rules: {
-        'prettier/prettier': 'error'
+        'semi': [1, 'never']
     },
     root: true,
 };

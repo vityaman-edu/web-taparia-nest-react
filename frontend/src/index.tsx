@@ -1,17 +1,18 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import "./index.css";
-import App from "./app/App";
+import React from 'react'
+import { createRoot } from 'react-dom/client'
+import { Provider } from 'react-redux'
+import { store } from './app/store'
+import App from './app/App'
+import './index.scss'
 
-const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
-);
-
-const APP_NAME = "Taparia"
+const container = 
+  document.getElementById('root') as HTMLElement
+const root = createRoot(container)
 
 root.render(
   <React.StrictMode>
-    <h1>Welcome to {APP_NAME}, man!</h1>
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>
-);
+)

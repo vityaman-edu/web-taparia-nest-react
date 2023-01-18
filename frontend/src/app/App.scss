@@ -1,0 +1,54 @@
+@use '../color';
+@use '../common';
+
+li.nav-inline {
+  display: inline;
+}
+
+li.nav-no-bullet {
+  list-style-type: none;
+}
+
+.nav > * {
+  margin-left: 0.5%;
+  margin-right: 0.5%;
+}
+
+.nav > * > a {
+  font-size: 6;
+  color: color.$text-on-dark;
+}
+
+.nav {
+  margin-left: 1%;
+}
+
+.App {
+  margin: 1%;
+}
+
+.App-main {
+  text-align: center;
+  margin-left: 5%;
+  margin-right: 5%;
+  background-color: color.$background-light;
+  color: color.$text-on-light;
+}
+
+.App-title {
+  padding-top: 1%;
+  padding-bottom: 1%;
+  background-color: color.$primary;
+  color: color.$text-on-dark
+}
+
+.App-columns {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.App-columns > * > h2 {
+  font-size: large;
+  padding: 2%;
+}

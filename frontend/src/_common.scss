@@ -1,0 +1,11 @@
+@use 'color';
+
+@mixin shadow {
+    $shadow: 3px;
+    box-shadow: $shadow $shadow color.$accent;
+}
+
+.shadow-on-hover:hover {
+    @include shadow;
+}
+
