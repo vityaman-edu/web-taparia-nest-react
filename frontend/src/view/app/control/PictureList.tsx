@@ -1,35 +1,47 @@
-import Button from "./Button"
+import { useAppDispatch, useAppSelector } from "../../../state/hooks"
+import { pictureExplorerAction } from "../../../state/slice/pictureExplorerSlice"
+import { Button } from "./Button"
+import { Picture } from '../../../state/model/picture/picture'
 import "./PictureList.scss"
 
-
 export const PictureListItem = (p: {
-  name: string
-}) => (
-  <tr className="PictureListItem">
-    <td>{p.name}</td>
-    <td><Button id="" content="Load"/></td>
-  </tr>
-)
+  picture: Picture
+}) => {
+  const dispatch = useAppDispatch()
+  
+  return (
+    <tr className="PictureListItem">
+      <td>{p.picture.name}</td>
+      <td>
+        <Button 
+          content="Load"
+          onClick={() => 
+            dispatch(pictureExplorerAction.set(p.picture.id))
+          }/>
+      </td>
+    </tr>
+  )
+}
 
 export const PictureList = () => {
-  const list = [
-    <PictureListItem name="Test picture 1" />,
-    <PictureListItem name="Test picture 2" />,
-    <PictureListItem name="Test picture 3" />,
-    <PictureListItem name="Test picture 4" />,
-    <PictureListItem name="Test picture 5" />,
-    <PictureListItem name="Test picture 6" />,
-    <PictureListItem name="Test picture 7" />,
-    <PictureListItem name="Test picture 8" />
-  ]
+  const pictures = useAppSelector(state => state.pictureExplorer.all)
+
+  const items = pictures.map(picture =>
+    <PictureListItem key={picture.id} picture={picture}/>
+  )
+
   return (
     <div className="PictureList">
       <table className="PictureList-table">
-        <tr>
-          <th>Pictures</th>
-          <th>Do</th>
-        </tr>
-        {list}
+        <thead>
+          <tr>
+            <th>Pictures</th>
+            <th>Do</th>
+          </tr>
+        </thead>
+        <tbody>
+          {items}
+        </tbody>
       </table>
     </div>
   )

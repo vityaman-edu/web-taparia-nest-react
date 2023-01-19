@@ -7,7 +7,7 @@ export class User {
 }
 
 export namespace User {
-    export function fromJson(json: Map<string, any>) {
+    export function fromJson(json: Map<string, any>): User {
       return new User(
         json.get('id'), 
         json.get('name')

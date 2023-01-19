@@ -1,16 +1,17 @@
 import { 
   configureStore, 
   ThunkAction, 
-  Action, 
-  combineReducers 
+  Action
 } from '@reduxjs/toolkit'
 import logger from 'redux-logger'
-import { pictureListSlice } from './slice/pictureListSlice'
+import { pictureExplorerSlice } from './slice/pictureExplorerSlice'
+import { userSlice } from './slice/userSlice'
 
 export const store = configureStore({
-  reducer: combineReducers([
-    pictureListSlice.reducer
-  ]),
+  reducer: {
+    pictureExplorer: pictureExplorerSlice.reducer,
+    user: userSlice.reducer
+  },
   middleware: [
     logger
   ] as const,

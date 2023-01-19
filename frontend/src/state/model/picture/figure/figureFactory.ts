@@ -15,9 +15,7 @@ export namespace FigureFactory {
     case 'union':        return unionFromJson(json)
     case 'negation':     return negationFromJson(json)
     case 'colored':      return coloredFromJson(json)
-    default: throw new Error(
-      `type ${json.get('type')} is not supported`
-    )
+    default: throw new Error(`type ${json.get('type')} is not supported`)
     }
   }
 

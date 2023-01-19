@@ -9,7 +9,9 @@ module.exports = {
     ],
     rules: {
         "semi":   ["error", "never"],
-        "indent": ["error", 2]
+        "indent": ["error", 2],
+        "no-inner-declarations": ["warn", "both"],
+        "@typescript-eslint/no-namespace": "off",
     },
     root: true,
 };
