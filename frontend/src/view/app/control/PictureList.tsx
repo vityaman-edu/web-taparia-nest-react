@@ -1,3 +1,4 @@
+import Button from "./Button"
 import "./PictureList.scss"
 
 
@@ -6,6 +7,7 @@ export const PictureListItem = (p: {
 }) => (
   <tr className="PictureListItem">
     <td>{p.name}</td>
+    <td><Button id="" content="Load"/></td>
   </tr>
 )
 
@@ -25,6 +27,7 @@ export const PictureList = () => {
       <table className="PictureList-table">
         <tr>
           <th>Pictures</th>
+          <th>Do</th>
         </tr>
         {list}
       </table>

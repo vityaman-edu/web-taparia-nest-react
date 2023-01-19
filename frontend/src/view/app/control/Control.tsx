@@ -1,5 +1,6 @@
 import './Control.scss'
 import { PictureList } from './PictureList'
+import { Button } from './Button'
 
 const Control = () => (
   <div className="Control">
@@ -27,24 +28,12 @@ const Control = () => (
       <br/>  
       <br/>  
       <div className="control-buttons">
-        <button 
-          id="create-picture" 
-          type="button" 
-          className="form-button">Create</button>
-        <button 
-          id="get-picture" 
-          type="button" 
-          className="form-button">Get</button>
-        <button 
-          id="list-pictures" 
-          type="button" 
-          className="form-button">List</button>
-        <button 
-          id="reload-pictures" 
-          type="button" 
-          className="form-button">
+        <Button id="create-picture"  content="Create"/>
+        <Button id="get-picture"     content="Get"/>
+        <Button id="list-pictures"   content="List"/>
+        <Button id="reload-pictures" content={
           <span className="reload">&#x21bb;</span>
-        </button>
+        }/>
       </div>                         
     </form>
     <PictureList/>
