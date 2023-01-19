@@ -1,4 +1,4 @@
-import $ from "jquery";
+import $ from "jquery"
 import { Picture } from "../../state/model/picture/picture"
 import { Figure } from "../../state/model/picture/figure/astraction/figure"
 import { Vector } from "../../state/model/picture/figure/astraction/vector"
