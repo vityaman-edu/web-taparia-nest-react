@@ -1,31 +1,37 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { Vector } from "../model/picture/figure/astraction/vector"
-import { Ellipse } from "../model/picture/figure/primitive/ellipse"
 import { Picture } from "../model/picture/picture"
 
-export const pictureExplorerSlice = createSlice({
-  name: "pictureExplorerSlice",
-  initialState: {
-    currentId: 1,
-    all: [
-      new Picture(1, 0, "Test picture 1", new Ellipse(
-        {x: 10, y: 10} as Vector, 
-        {x: 10, y: 10} as Vector
-      )),
-      new Picture(2, 0, "Test picture 2", new Ellipse(
-        {x: 10, y: 20} as Vector, 
-        {x: 10, y: 60} as Vector
-      )),
-    ]
-  },
-  reducers: {
-    post: (state, action: PayloadAction<Picture>) => {
-      state.all.push(action.payload)
-    },
-    set: (state, action: PayloadAction<number>) => {
-      state.currentId = action.payload
-    }
-  },
-})
+export namespace PictureExplorer {
+  export enum State {
+    EDITING, 
+    VIEWING
+  }
 
-export const pictureExplorerAction = pictureExplorerSlice.actions
+  export const Slice = createSlice({
+    name: "pictureExplorerSlice",
+    initialState: {
+      currentPicture: null as (Picture | null),
+      pictureHeaders: [] as Picture.Header[],
+      state: PictureExplorer.State.EDITING
+    },
+    reducers: {
+      setCurrentPicture(state, action: PayloadAction<Picture>): void {
+        const picture = action.payload
+        state.state = PictureExplorer.State.VIEWING
+        state.currentPicture = picture
+        if (!state.pictureHeaders.some(pic => pic.id == picture.id)) {
+          state.pictureHeaders.push(picture)
+        }
+      },
+      addPicture(state, action: PayloadAction<Picture.Header>): void {
+        const picture = action.payload
+        if (!state.pictureHeaders.some(pic => pic.id == picture.id)) {
+          state.pictureHeaders.push(picture)
+        }
+      }
+    },
+  })
+}
+
+export const pictureExplorerAction = 
+  PictureExplorer.Slice.actions

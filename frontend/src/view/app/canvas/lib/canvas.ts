@@ -10,18 +10,17 @@ export class Canvas {
   private readonly coordinates = new CoordinatesDrawable()
 
   constructor(
-    private readonly canvas: HTMLCanvasElement,
+    private readonly canvas: () => HTMLCanvasElement,
     private readonly origin: Vector
   ) {  }
 
   redraw(drawable: Drawable) {
     this.clear()
-    this.draw(this.coordinates)
     this.draw(drawable)
   }
 
   draw(drawable: Drawable): Canvas {
-    const ctx = this.canvas.getContext("2d")!
+    const ctx = this.canvas().getContext("2d")!
     ctx.save()
     ctx.translate(this.origin.x, this.origin.y)
     ctx.scale(1, -1)
@@ -40,10 +39,11 @@ export class Canvas {
       new Vector(INF, INF),
       new Vector(-INF, INF)
     ])))
+    this.draw(this.coordinates)
   }
 
   setMouseClickListener(callback: MouseEventCallback): Canvas {
-    this.canvas.onclick = ((e: MouseEvent) => {
+    this.canvas().onclick = ((e: MouseEvent) => {
       const mousePosition = new Vector(e.clientX, e.clientY)
       callback(this.translate(mousePosition))
     }).bind(this)
@@ -59,7 +59,7 @@ export class Canvas {
   }
 
   private topLeftCorner(): Vector {
-    const rectangle = this.canvas.getBoundingClientRect()
+    const rectangle = this.canvas().getBoundingClientRect()
     return new Vector(rectangle.left, rectangle.top)
   }
 }

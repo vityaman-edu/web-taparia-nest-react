@@ -1,15 +1,11 @@
-import { 
-  configureStore, 
-  ThunkAction, 
-  Action
-} from '@reduxjs/toolkit'
+import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit'
 import logger from 'redux-logger'
-import { pictureExplorerSlice } from './slice/pictureExplorerSlice'
+import { PictureExplorer } from './slice/pictureExplorerSlice'
 import { userSlice } from './slice/userSlice'
 
 export const store = configureStore({
   reducer: {
-    pictureExplorer: pictureExplorerSlice.reducer,
+    pictureExplorer: PictureExplorer.Slice.reducer,
     user: userSlice.reducer
   },
   middleware: [
@@ -20,9 +16,4 @@ export const store = configureStore({
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch;
 export type AppThunk<ReturnType = void> = 
-  ThunkAction<
-    ReturnType,
-    RootState,
-    unknown,
-    Action<string>
-  >
+  ThunkAction<ReturnType, RootState, unknown, Action<string>>

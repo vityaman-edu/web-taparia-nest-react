@@ -1,10 +1,10 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { createSlice } from "@reduxjs/toolkit"
 
 export const userSlice = createSlice({
   name: "userSlice",
   initialState: {
-    name: "stranger",
     id: 0,
+    name: "stranger",
     authToken: ""
   },
   reducers: {

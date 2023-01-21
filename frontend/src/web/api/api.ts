@@ -1,195 +1,37 @@
-import $ from "jquery"
-import { Picture } from "../../state/model/picture/picture"
 import { Figure } from "../../state/model/picture/figure/astraction/figure"
 import { Vector } from "../../state/model/picture/figure/astraction/vector"
-import { Utility } from "./utility"
-import { User } from "./dto/user"
+import { Ellipse } from "../../state/model/picture/figure/primitive/ellipse"
+import { Picture } from "../../state/model/picture/picture"
 import { TapResult } from "./dto/tapResult"
-import { AccessToken } from "./dto/accessToken"
+import { User } from "./dto/user"
+import { FakeApi } from "./fakeApi"
 
-const GET = 'GET'
-const POST = 'POST'
-
-export class Api {
-  constructor(
-        private readonly host: string,
-        private readonly timeout: number,
-        private readonly token: AccessToken,
-        private readonly onError: (
-            request: JQuery.jqXHR<any>, 
-            status: JQuery.Ajax.ErrorTextStatus,
-            error: string
-        ) => void
-  ) {
-  }
-
-  ops = new class {
-    constructor(private readonly api: Api) {}
-
-    ping(): Promise<void> {
-      return new Promise((resolve, reject) => $.ajax({
-        type: GET,
-        url: this.path('/ping'),
-        timeout: this.api.timeout,
-        success: resolve,
-        error: (request, status, error) => {
-          this.api.onError(request, status, error)
-          reject(...[request, status, error])
-        }
-      }))
-    }
-
-    path(suffix: string): string {
-      return `${this.api.path(`/ops/${suffix}`)}`
-    }
-  }(this)
-
-  users = new class {
-    constructor(private readonly api: Api) {}
-
-    getByName(username: string): Promise<User> {
-      return new Promise((resolve, reject) => $.ajax({
-        type: GET,
-        url: this.path(`?name=${username}`),
-        timeout: this.api.timeout,
-        success: (data: object) => {
-          const json = Utility.deepConvertToMap(data)
-          const user = User.fromJson(json)
-          resolve(user)
-        },
-        error: (request, status, error) => {
-          this.api.onError(request, status, error)
-          reject(...[request, status, error])
-        }
-      }))
-    }
-
-    path(suffix: string): string {
-      return `${this.api.path(`/users${suffix}`)}`
-    }
-  }(this)
-
-  pictures = new class {
-    constructor(private readonly api: Api) {}
-
-    post(name: string, data: Figure): Promise<number> {
-      return new Promise((resolve, reject) => $.ajax({
-        type: POST,
-        url: this.path(''),
-        timeout: this.api.timeout,
-        headers: this.api.token.toHeaders(),
-        contentType: "application/json",
-        data: JSON.stringify({
-          'name': name,
-          'data': data
-        }),
-        success: (data: object) => {
-          const json = Utility.deepConvertToMap(data)
-          resolve(json.get('picture_id'))
-        },
-        error: (response, status, error) => {
-          this.api.onError(response, status, error)
-          reject(...[response, status, error])
-        }
-      }))
-    }
-
-    getById(pictureId: number): Promise<Picture> {
-      return new Promise((resolve, reject) => $.ajax({
-        type: GET,
-        url: this.path(`/${pictureId}`),
-        timeout: this.api.timeout,
-        headers: this.api.token.toHeaders(),
-        success: (data: object) => {
-          const json = Utility.deepConvertToMap(data)
-          const picture = Picture.fromJson(json)
-          resolve(picture)
-        },
-        error: (response, status, error) => {
-          this.api.onError(response, status, error)
-          reject(...[response, status, error])
-        }
-      }))
-    }
-
-    getAllByOwnerId(ownerId: number): Promise<Array<Picture>> {
-      return new Promise((resolve, reject) => $.ajax({
-        type: GET,
-        url: this.path(`?owner_id=${ownerId}`),
-        timeout: this.api.timeout,
-        headers: this.api.token.toHeaders(),
-        success: (data: object) => {
-          const pictures = $
-            .makeArray(data as ArrayLike<any>)
-            .map(Utility.deepConvertToMap)
-            .map(Picture.fromJson)
-          resolve(pictures)
-        },
-        error: (response, status, error) => {
-          this.api.onError(response, status, error)
-          reject(...[response, status, error])
-        }
-      }))
-    }
-
-    path(suffix: string): string {
-      return `${this.api.path(`/pictures${suffix}`)}`
-    }
-  }(this)
-
-  picturesTaps = new class {
-    constructor(private readonly api: Api) {}
-
-    post(pictureId: number, point: Vector): Promise<TapResult> {
-      return new Promise((resolve, reject) => $.ajax({
-        type: POST,
-        url: this.path(pictureId, ''),
-        timeout: this.api.timeout,
-        headers: this.api.token.toHeaders(),
-        contentType: "application/json",
-        data: JSON.stringify({
-          'x': point.x,
-          'y': point.y,
-        }),
-        success: (data: object) => {
-          const json = Utility.deepConvertToMap(data)
-          resolve(TapResult.fromJson(json))
-        },
-        error: (response, status, error) => {
-          this.api.onError(response, status, error)
-          reject(...[response, status, error])
-        }
-      }))
-    }
-
-    getAllByOwnerId(
-      pictureId: number, ownerId: number
-    ): Promise<Array<TapResult>> {
-      return new Promise((resolve, reject) => $.ajax({
-        type: GET,
-        url: this.path(pictureId, `?owner_id=${ownerId}`),
-        timeout: this.api.timeout,
-        headers: this.api.token.toHeaders(),
-        success: (data: object) => {
-          const results = $
-            .makeArray(data as ArrayLike<any>)
-            .map(Utility.deepConvertToMap)
-            .map(TapResult.fromJson)
-          resolve(results)
-        },
-        error: (response: any, status: any, error: any) => {
-          this.api.onError(response, status, error)
-          reject(...[response, status, error])
-        }
-      }))
-    }
-
-    path(pictureId: number, suffix: string): string {
-      return `${this.api.path(`/pictures/${pictureId}/taps${suffix}`)}`
-    }
-  }(this)
-
-  private path(suffix: string): string {
-    return `${this.host}/api${suffix}`
+export interface Api {
+  ops: {
+    ping: () => Promise<void>,
+  },
+  users: {
+    getByName: (username: string) => Promise<User>
+  },
+  pictures: {
+    post: (name: string, data: Figure) => Promise<number>,
+    getById: (pictureId: number) => Promise<Picture>,
+    getAllByOwnerId: (ownerId: number) => Promise<Array<Picture>>
+  },
+  picturesTaps: {
+    post: (pictureId: number, point: Vector) => Promise<TapResult>,
+    getAllByOwnerId: (pictureId: number, ownerId: number) => Promise<Array<TapResult>>
   }
 }
+
+let nextId = 0
+const userId = 0
+const picturesById = new Map<number, Picture>()
+while (nextId < 10) {
+  picturesById.set(++nextId, new Picture(
+    nextId, userId, `Test picture ${nextId}`, new Ellipse(
+    {x: nextId * 10, y: nextId * 10} as Vector, 
+    {x: nextId * 10, y: nextId * 10} as Vector
+    )))
+}
+export const api = new FakeApi(picturesById, nextId)
