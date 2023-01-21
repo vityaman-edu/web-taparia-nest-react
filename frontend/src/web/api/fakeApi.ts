@@ -24,7 +24,12 @@ export class FakeApi implements Api {
 
   pictures = { 
     post: (name: string, data: Figure) => new Promise<number>(
-      (resolve, reject) => resolve(this.nextId++)
+      (resolve, reject) => {
+        this.picturesById.set(++this.nextId, new Picture(
+          this.nextId, 1, name, data
+        ))
+        resolve(this.nextId)
+      }
     ),
     getById: (pictureId: number) => new Promise<Picture>(
       (resolve, reject) => {

@@ -6,9 +6,11 @@
 }
 
 .Button {
+  margin: 1%;
+  
   color: color.$text-on-light;
   background-color: color.$background-light;
-
+  
   font-family: monospace;
   border: 1px solid #000000;
   padding-left: 2%;

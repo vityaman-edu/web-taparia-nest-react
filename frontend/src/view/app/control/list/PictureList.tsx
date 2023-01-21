@@ -2,7 +2,7 @@ import { useAppDispatch, useAppSelector } from "../../../../state/hooks"
 import { Picture } from '../../../../state/model/picture/picture'
 import { Button } from "./../button/Button"
 import { api } from "../../../../web/api/api"
-import { pictureExplorerAction } from "../../../../state/slice/pictureExplorerSlice"
+import { PictureExplorer, pictureExplorerAction } from "../../../../state/slice/pictureExplorerSlice"
 import "./PictureList.scss"
 
 export const PictureListItem = (p: {
@@ -19,6 +19,9 @@ export const PictureListItem = (p: {
           onClick={async () => {
             const picture = await api.pictures.getById(p.picture.id)
             dispatch(pictureExplorerAction.setCurrentPicture(picture))
+            dispatch(pictureExplorerAction.setState(
+              PictureExplorer.State.VIEWING
+            ))
           }}/>
       </td>
     </tr>
