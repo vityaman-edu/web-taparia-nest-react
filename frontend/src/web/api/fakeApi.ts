@@ -1,6 +1,5 @@
 import { Figure } from "../../state/model/picture/figure/astraction/figure"
 import { Vector } from "../../state/model/picture/figure/astraction/vector"
-import { Ellipse } from "../../state/model/picture/figure/primitive/ellipse"
 import { Picture } from "../../state/model/picture/picture"
 import { Api } from "./api"
 import { TapResult } from "./dto/tapResult"
@@ -13,18 +12,18 @@ export class FakeApi implements Api {
   ) {}
 
   ops = { 
-    ping: () => new Promise<void>((resolve, reject) => resolve())
+    ping: () => new Promise<void>(resolve => resolve())
   }
   
   users = { 
     getByName: (username: string) => new Promise<User>(
-      (resolve, reject) => resolve(new User(1, username))
+      resolve => resolve(new User(1, username))
     )
   }
 
   pictures = { 
     post: (name: string, data: Figure) => new Promise<number>(
-      (resolve, reject) => {
+      resolve => {
         this.picturesById.set(++this.nextId, new Picture(
           this.nextId, 1, name, data
         ))
@@ -39,12 +38,10 @@ export class FakeApi implements Api {
       }
     ),
     getAllByOwnerId: (ownerId: number) => new Promise<Picture[]>(
-      (resolve, reject) => {
-        resolve(
-          [...this.picturesById.values()]
-            .filter(pic => pic.ownerId == ownerId)
-        )
-      }
+      resolve => resolve(
+        [...this.picturesById.values()]
+          .filter(pic => pic.ownerId == ownerId)
+      )
     )
   }
 
