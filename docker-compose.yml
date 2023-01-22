@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  database:
+    container_name: taparia-database
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: taparia
+    restart: always
