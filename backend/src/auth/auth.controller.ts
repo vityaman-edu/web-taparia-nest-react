@@ -13,7 +13,7 @@ import { LocalCredentials } from './entity/local.credentials'
 import { AccessTokenGuard } from './guard/access.token.guard'
 import { RefreshTokenGuard } from './guard/refresh.token.guard'
 
-@Controller('auth')
+@Controller('/api/auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
@@ -38,6 +38,7 @@ export class AuthController {
     this.authService.logout(auth.accountId)
   }
 
+  @PublicEndpoint()
   @UseGuards(RefreshTokenGuard)
   @Post('/refresh')
   @HttpCode(HttpStatus.OK)

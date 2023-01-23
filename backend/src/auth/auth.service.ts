@@ -14,17 +14,16 @@ export class AuthService {
   ) {}
 
   async localSignUp(credentials: LocalCredentials): Promise<TokenPair> {
-    const passwordHash = await this.hash(credentials.password)
     const account = await this.accountRepository
       .create({
         email: credentials.email,
-        passwordHash: passwordHash,
+        passwordHash: await this.hash(credentials.password),
       })
-      .catch((error) => {
-        if (error instanceof AccountAlreadyExistsError) {
-          throw new ForbiddenException(error.message)
+      .catch((e) => {
+        if (e instanceof AccountAlreadyExistsError) {
+          throw new ForbiddenException(e.message)
         }
-        throw error
+        throw e
       })
     const tokens = await this.generateTokenPair(account)
     await this.accountRepository.setRefrestTokenHash({
