@@ -1,9 +1,9 @@
 import { ForbiddenException, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { AccountRepository } from './account.repository'
-import { LocalCredentials } from './entity/local.credentials'
+import { LocalCredentials } from './model/local.credentials'
 import * as bcrypt from 'bcrypt'
-import { TokenPair } from './entity/token.pair'
+import { TokenPair } from './model/token.pair'
 import { AccountAlreadyExistsError } from './error/account.already.exists.error'
 
 @Injectable()
