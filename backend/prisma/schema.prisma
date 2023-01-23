@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,11 +8,32 @@ datasource db {
 }
 
 model Account {
+  id               Int      @id @default(autoincrement())
+  email            String   @unique
+  passwordHash     String
+  refreshTokenHash String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  Profile          Profile?
+
   @@map("account")
-  id                Int       @id @default(autoincrement())  
-  email             String    @unique
-  passwordHash      String
-  refreshTokenHash  String?
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
+}
+
+model Profile {
+  account    Account   @relation(fields: [account_id], references: [id])
+  name       String
+  pictures   Picture[]
+  account_id Int       @id
+
+  @@map("profile")
+}
+
+model Picture {
+  id      Int     @id @default(autoincrement())
+  owner   Profile @relation(fields: [ownerId], references: [account_id])
+  name    String
+  content Json
+  ownerId Int
+
+  @@map("picture")
 }

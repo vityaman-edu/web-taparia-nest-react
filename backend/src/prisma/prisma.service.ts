@@ -1,18 +1,15 @@
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common'
 import { PrismaClient } from '@prisma/client'
+import { PrismaConfig } from './prisma.config'
 
 @Injectable()
 export class PrismaService
   extends PrismaClient
   implements OnModuleInit, OnModuleDestroy
 {
-  constructor() {
+  constructor(private config: PrismaConfig) {
     super({
-      datasources: {
-        db: {
-          url: 'postgresql://postgres:admin@localhost:5432/postgres?schema=public',
-        },
-      },
+      datasources: { db: { url: config.databaseUrl() } },
     })
   }
 

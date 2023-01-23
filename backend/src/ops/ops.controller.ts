@@ -1,16 +1,6 @@
-import {
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  UseGuards,
-} from '@nestjs/common'
-import {
-  AuthInfo,
-  AuthPayload,
-} from 'src/auth/decorator/auth.payload.decorator'
-import { PublicEndpoint } from 'src/auth/decorator/public.endpoint.decorator'
-import { AccessTokenGuard } from 'src/auth/guard/access.token.guard'
+import { Controller, Get, HttpCode, HttpStatus } from '@nestjs/common'
+import { AuthInfo, AuthPayload } from '../auth/decorator/auth.payload.decorator'
+import { PublicEndpoint } from '../auth/decorator/public.endpoint.decorator'
 
 @Controller('/api/ops')
 export class OpsController {
@@ -21,7 +11,6 @@ export class OpsController {
     return { message: 'pong' }
   }
 
-  @UseGuards(AccessTokenGuard)
   @Get('/security')
   @HttpCode(HttpStatus.OK)
   security(@AuthPayload() auth: AuthInfo) {

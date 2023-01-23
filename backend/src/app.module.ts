@@ -5,14 +5,16 @@ import { APP_GUARD } from '@nestjs/core'
 import { AccessTokenGuard } from './auth/guard/access.token.guard'
 import { OpsModule } from './ops/ops.module'
 import { ConfigModule } from '@nestjs/config'
+import { PictureModule } from './picture/picture.module'
 
 @Module({
   imports: [
     AuthModule,
-    PrismaModule,
     OpsModule,
+    PictureModule,
+    PrismaModule,
     ConfigModule.forRoot({
-      envFilePath: ['.env.production', '.env.development.local'],
+      envFilePath: ['.env', '.env.development.local'],
     }),
   ],
   providers: [{ provide: APP_GUARD, useClass: AccessTokenGuard }],
