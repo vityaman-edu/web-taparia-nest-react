@@ -5,12 +5,14 @@ import { LocalCredentials } from './model/local.credentials'
 import * as bcrypt from 'bcrypt'
 import { TokenPair } from './model/token.pair'
 import { AccountAlreadyExistsError } from './error/account.already.exists.error'
+import { AuthConfig } from './auth.config'
 
 @Injectable()
 export class AuthService {
   constructor(
     private accountRepository: AccountRepository,
     private jwtService: JwtService,
+    private config: AuthConfig,
   ) {}
 
   async localSignUp(credentials: LocalCredentials): Promise<TokenPair> {
@@ -89,15 +91,20 @@ export class AuthService {
   }): Promise<TokenPair> {
     const DURATION_15_MINUTES = 15 * 60
     const DURATION_7_DAYS = 7 * 24 * 60 * 60
-    // TODO: access and refresh token secrets in .env
     return {
       accessToken: this.jwtService.sign(
         { sub: account.id, email: account.email },
-        { secret: 'access-token-secret', expiresIn: DURATION_15_MINUTES },
+        {
+          secret: this.config.jwtAccessTokenSecret(),
+          expiresIn: DURATION_15_MINUTES,
+        },
       ),
       refreshToken: this.jwtService.sign(
         { sub: account.id, email: account.email },
-        { secret: 'refresh-token-secret', expiresIn: DURATION_7_DAYS },
+        {
+          secret: this.config.jwtRefreshTokenSecret(),
+          expiresIn: DURATION_7_DAYS,
+        },
       ),
     }
   }
