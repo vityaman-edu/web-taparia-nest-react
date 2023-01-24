@@ -6,6 +6,7 @@ import { AccessTokenGuard } from './auth/guard/access.token.guard'
 import { OpsModule } from './ops/ops.module'
 import { ConfigModule } from '@nestjs/config'
 import { PictureModule } from './picture/picture.module'
+import { TapModule } from './tap/tap.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { PictureModule } from './picture/picture.module'
     ConfigModule.forRoot({
       envFilePath: ['.env', '.env.development.local'],
     }),
+    TapModule,
   ],
   providers: [{ provide: APP_GUARD, useClass: AccessTokenGuard }],
 })

@@ -24,6 +24,7 @@ model Profile {
   name       String
   pictures   Picture[]
   account_id Int       @id
+  taps       Tap[]
 
   @@map("profile")
 }
@@ -33,7 +34,25 @@ model Picture {
   owner   Profile @relation(fields: [ownerId], references: [account_id])
   name    String
   content Json
+  taps    Tap[]
   ownerId Int
 
   @@map("picture")
+}
+
+enum TapStatus {
+  HIT
+  MISS
+}
+
+model Tap {
+  id        Int       @id @default(autoincrement())
+  owner     Profile   @relation(fields: [ownerId], references: [account_id])
+  picture   Picture   @relation(fields: [pictureId], references: [id])
+  status    TapStatus
+  createdAt DateTime  @default(now())
+  pictureId Int
+  ownerId   Int
+
+  @@map("tap")
 }

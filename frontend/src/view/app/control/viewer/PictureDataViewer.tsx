@@ -75,6 +75,8 @@ export const PictureDataViewer = () => {
         state == PictureExplorer.State.EDITING && <Button 
           content="Save" 
           onClick={async () => {
+            trySetCurrentPicture(pictureName, pictureData)
+            // TODO: dispatch using async thunk
             const name = currentPicture.name
             const figure = currentPicture.figure
             const pictureId = await api.pictures.post(name, figure)
