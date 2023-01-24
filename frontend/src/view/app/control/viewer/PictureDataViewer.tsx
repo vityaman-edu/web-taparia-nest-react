@@ -11,7 +11,6 @@ import { Picture } from '../../../../state/model/picture/picture'
 import './PictureDataViewer.scss'
 import { useEffect } from 'react'
 import { api, userId } from '../../../../state/api'
-import { fetchTaps } from '../../../../state/slice/tableSlice'
 
 const parseFigure = (text: string) =>
   FigureFactory.fromJson(Utility.deepConvertToMap(JSON.parse(text)))
@@ -55,9 +54,13 @@ export const PictureDataViewer = () => {
       <input
         type="text"
         className="shadow-on-hover"
-        disabled={state == PictureExplorer.State.VIEWING}
+        disabled={
+          state == PictureExplorer.State.VIEWING ||
+          state == PictureExplorer.State.COMMITED
+        }
         value={
-          state == PictureExplorer.State.VIEWING
+          state == PictureExplorer.State.VIEWING ||
+          state == PictureExplorer.State.COMMITED
             ? currentPicture!.name
             : pictureName
         }
@@ -72,7 +75,10 @@ export const PictureDataViewer = () => {
         autoComplete="off"
         wrap="off"
         placeholder="{ *picture data* }"
-        disabled={state == PictureExplorer.State.VIEWING}
+        disabled={
+          state == PictureExplorer.State.VIEWING ||
+          state == PictureExplorer.State.COMMITED
+        }
         value={
           state == PictureExplorer.State.VIEWING
             ? JSON.stringify(currentPicture!.content, null, 2)
@@ -89,9 +95,6 @@ export const PictureDataViewer = () => {
             onClick={async () => {
               if (currentPicture != null) {
                 dispatch(PictureExplorer.postPicture(currentPicture))
-                dispatch(
-                  pictureExplorerAction.setState(PictureExplorer.State.VIEWING),
-                )
               }
             }}
           />
@@ -105,7 +108,7 @@ export const PictureDataViewer = () => {
           />
         </>
       )}
-      {state == PictureExplorer.State.EDITING && (
+      {state == PictureExplorer.State.EDITING && pictureName != '' && (
         <>
           <Button
             content="Commit"

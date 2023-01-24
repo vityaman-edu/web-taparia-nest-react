@@ -30,9 +30,9 @@ export const api = new RefreshingTokenApi(
   setTokens,
   (error: any) => {
     if (error.json.statusCode == 401 || error.json.statusCode == 403) {
-      window.location.replace(
-        window.location.href.replace('/app', '/auth/signIn'),
-      )
+      // window.location.replace(
+      //   window.location.href.replace('/app', '/auth/signIn'),
+      // )
     }
     throw error
   },

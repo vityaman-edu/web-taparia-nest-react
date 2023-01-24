@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { api, userId } from '../api'
+import { useAppDispatch } from '../hooks'
 import { Figure } from '../model/picture/figure/astraction/figure'
 import { Picture } from '../model/picture/picture'
 
@@ -23,7 +24,7 @@ export namespace PictureExplorer {
   export enum State {
     EDITING,
     VIEWING,
-    COMMITED
+    COMMITED,
   }
 
   export const Slice = createSlice({
@@ -52,7 +53,7 @@ export namespace PictureExplorer {
       setOk(state) {
         state.error = ''
         state.status = 'succeeded'
-      }
+      },
     },
     extraReducers(builder) {
       builder
@@ -76,6 +77,7 @@ export namespace PictureExplorer {
           state.status = 'succeeded'
           state.pictureHeaders.push(action.payload)
           state.currentPicture = action.payload
+          state.state = State.VIEWING
         })
         .addCase(postPicture.rejected, (state, action) => {
           state.status = 'failed'

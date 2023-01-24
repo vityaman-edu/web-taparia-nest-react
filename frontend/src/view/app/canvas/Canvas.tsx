@@ -1,9 +1,10 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../../state/hooks'
 import { Canvas as Field } from './lib/canvas'
 import { Vector } from '../../../state/model/picture/figure/astraction/vector'
 import './Canvas.scss'
 import { postTap } from '../../../state/slice/tableSlice'
+import { PictureExplorer } from '../../../state/slice/pictureExplorerSlice'
 
 const CANVAS_ID = 'battlefield'
 const CANVAS_WIDTH = 600
@@ -19,6 +20,7 @@ const Canvas = () => {
   const picture = useAppSelector(
     (state) => state.pictureExplorer.currentPicture,
   )
+  const explorerState = useAppSelector((state) => state.pictureExplorer.state)
   const taps = useAppSelector((state) => state.table.taps)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const field = new Field(() => canvasRef.current as HTMLCanvasElement, {
@@ -28,7 +30,9 @@ const Canvas = () => {
 
   useEffect(() => {
     field.setMouseClickListener((pos) => {
-      dispatch(postTap({ pictureId: picture!.id, pos: pos }))
+      if (explorerState == PictureExplorer.State.VIEWING) {
+        dispatch(postTap({ pictureId: picture!.id, pos: pos }))
+      }
     })
     field.clear()
     if (picture != null) {
@@ -41,7 +45,7 @@ const Canvas = () => {
       )
     }
   })
-  
+
   window.addEventListener('resize', () => {
     const { innerWidth: width, innerHeight: height } = window
     setCanvasSize(width > 800 ? 600 : 300)
