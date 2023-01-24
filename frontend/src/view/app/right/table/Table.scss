@@ -1,10 +1,11 @@
 @use '../../../css/color';
 @use '../../../css/common';
 
+
 .Table {
-  height: 45%;
+  height: 100%;
   width: 80%;
-  overflow: auto;
+  overflow: scroll;
   margin-left: auto;
   margin-right: auto;
   display: flex;
@@ -13,6 +14,8 @@
 }
 
 .Table-table {
+  height: 100%;
+  overflow: scroll;
   border-collapse: separate;
   border-spacing: 10px 0;
 }

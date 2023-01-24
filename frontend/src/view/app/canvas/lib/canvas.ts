@@ -1,6 +1,7 @@
 import { Colored } from "../../../../state/model/picture/figure/astraction/colored"
 import { Drawable } from "../../../../state/model/picture/figure/astraction/drawable"
 import { Vector } from "../../../../state/model/picture/figure/astraction/vector"
+import { Ellipse } from "../../../../state/model/picture/figure/primitive/ellipse"
 import { Polygon } from "../../../../state/model/picture/figure/primitive/polygon"
 import { CoordinatesDrawable } from "./coordinatesDrawable"
 
@@ -14,6 +15,12 @@ export class Canvas {
     private readonly origin: Vector
   ) {  }
 
+  tap(point: Vector, color: string) {
+    this.draw(new Colored(color, new Ellipse(
+      point, new Vector(5, 5)
+    )))
+  }
+
   redraw(drawable: Drawable) {
     this.clear()
     this.draw(drawable)
@@ -24,7 +31,7 @@ export class Canvas {
     ctx.save()
     ctx.translate(this.origin.x, this.origin.y)
     ctx.scale(1, -1)
-    ctx.fillStyle = "#444"
+    ctx.fillStyle = "#888"
     ctx.lineWidth = 2
     drawable.draw(ctx)
     ctx.restore()
@@ -43,6 +50,7 @@ export class Canvas {
   }
 
   setMouseClickListener(callback: MouseEventCallback): Canvas {
+    console.log('click')
     this.canvas().onclick = ((e: MouseEvent) => {
       const mousePosition = new Vector(e.clientX, e.clientY)
       callback(this.translate(mousePosition))

@@ -8,6 +8,6 @@ export class Union extends FigureAggregator {
   }
 
   contains(point: Point): boolean {
-    return !this.children.some((child) => child.contains(point))
+    return this.children.some((child) => child.contains(point))
   }
 }

@@ -13,8 +13,8 @@ const TableItem = (p: { tap: Tap }) => {
   return (
     <tr className="TableItem">
       <td>{asString(p.tap.createdAt)}</td>
-      <td>{p.tap.x}</td>
-      <td>{p.tap.y}</td>
+      <td>{p.tap.x.toFixed(1)}</td>
+      <td>{p.tap.y.toFixed(1)}</td>
       <td>{p.tap.status}</td>
     </tr>
   )
@@ -26,12 +26,7 @@ const Table = () => {
   const items = taps.map((tap) => <TableItem key={tap.id} tap={tap} />)
 
   return (
-    <div
-      className="Table"
-      style={{
-        width: '100%',
-      }}
-    >
+    <div className="Table">
       <table className="Table-table">
         <thead>
           <tr>
@@ -41,7 +36,6 @@ const Table = () => {
             <th>Status</th>
           </tr>
         </thead>
-        <tbody>{items}</tbody>
         <tbody>{items}</tbody>
       </table>
     </div>

@@ -1,6 +1,10 @@
 @use '../css/color';
 @use '../css/common';
 
+.App {
+  height: 100%;
+}
+
 li.nav-inline {
   display: inline;
 }
@@ -24,6 +28,7 @@ li.nav-no-bullet {
 }
 
 .App {
+  height: auto;
   margin: 1%;
 }
 

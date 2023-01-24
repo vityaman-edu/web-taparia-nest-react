@@ -148,6 +148,7 @@ export class HttpApi implements Api {
           },
           contentType: 'application/json',
           data: JSON.stringify({
+            pictureId: pictureId,
             x: point.x,
             y: point.y,
           }),
