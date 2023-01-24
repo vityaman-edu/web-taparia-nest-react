@@ -5,7 +5,7 @@ import "./Control.scss"
 const Control = () => {
   return (
     <div className="Control">
-      <h2>Control</h2>
+      <h2 className="Control-header">Control</h2>
       <PictureDataViewer/>
       <PictureList/>
     </div>
