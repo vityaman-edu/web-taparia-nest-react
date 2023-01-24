@@ -1,7 +1,7 @@
 import Control from './control/Control'
 import Canvas  from './canvas/Canvas'
-import Table   from './table/Table'
 import './App.scss'
+import RightPanel from './right/RightPanel'
 
 const App = () => {
   return (
@@ -28,7 +28,7 @@ const App = () => {
         <div className="App-columns">
           <Control/>
           <Canvas/>
-          <Table/>
+          <RightPanel/>
         </div>
       </div>
       <footer className="App-footer">

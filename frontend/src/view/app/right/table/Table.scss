@@ -1,0 +1,23 @@
+@use '../../../css/color';
+@use '../../../css/common';
+
+.Table {
+  height: 45%;
+  width: 80%;
+  overflow: auto;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.Table-table {
+  border-collapse: separate;
+  border-spacing: 10px 0;
+}
+
+.TableItem {
+  padding: 0%;
+  margin: 0%;
+}

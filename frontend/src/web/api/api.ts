@@ -1,8 +1,8 @@
 import { Figure } from '../../state/model/picture/figure/astraction/figure'
 import { Vector } from '../../state/model/picture/figure/astraction/vector'
 import { Picture } from '../../state/model/picture/picture'
+import { Tap } from '../../state/model/picture/Tap'
 import { LocalCredentials } from './dto/local.credentials'
-import { TapResult } from './dto/tapResult'
 import { TokenPair } from './dto/token.pair'
 import { User } from './dto/user'
 export interface Api {
@@ -17,12 +17,12 @@ export interface Api {
     getById: (pictureId: number) => Promise<Picture>
     getAllByOwnerId: (ownerId: number) => Promise<Array<Picture>>
   }
-  picturesTaps: {
-    post: (pictureId: number, point: Vector) => Promise<TapResult>
-    getAllByOwnerId: (
-      pictureId: number,
-      ownerId: number,
-    ) => Promise<Array<TapResult>>
+  taps: {
+    post: (pictureId: number, point: Vector) => Promise<Tap>
+    getAllWith: (filter: {
+      pictureId: number
+      ownerId: number
+    }) => Promise<Array<Tap>>
   }
   auth: {
     local: {

@@ -4,10 +4,10 @@ import { Figure } from '../../state/model/picture/figure/astraction/figure'
 import { Vector } from '../../state/model/picture/figure/astraction/vector'
 import { Utility } from './utility'
 import { User } from './dto/user'
-import { TapResult } from './dto/tapResult'
 import { Api } from './api'
 import { LocalCredentials } from './dto/local.credentials'
 import { TokenPair } from './dto/token.pair'
+import { Tap } from '../../state/model/picture/Tap'
 
 const GET = 'GET'
 const POST = 'POST'
@@ -16,7 +16,7 @@ export class HttpApi implements Api {
   constructor(
     private readonly host: string,
     private readonly timeout: number,
-    private readonly tokens: () => TokenPair
+    private readonly tokens: () => TokenPair,
   ) {}
 
   ops = new (class {
@@ -29,7 +29,7 @@ export class HttpApi implements Api {
           url: this.path('/ping'),
           timeout: this.api.timeout,
           success: resolve,
-          error: (request, status, error) => reject({status, error}),
+          error: (request, status, error) => reject({ status, error }),
         }),
       )
     }
@@ -53,7 +53,7 @@ export class HttpApi implements Api {
             const user = User.fromJson(json)
             resolve(user)
           },
-          error: (request, status, error) => reject({status, error}),
+          error: (request, status, error) => reject({ status, error }),
         }),
       )
     }
@@ -84,7 +84,7 @@ export class HttpApi implements Api {
             const json = Utility.deepConvertToMap(data)
             resolve(json.get('picture_id'))
           },
-          error: (request, status, error) => reject({status, error}),
+          error: (request, status, error) => reject({ status, error }),
         }),
       )
     }
@@ -103,7 +103,7 @@ export class HttpApi implements Api {
             const picture = Picture.fromJson(json)
             resolve(picture)
           },
-          error: (request, status, error) => reject({status, error}),
+          error: (request, status, error) => reject({ status, error }),
         }),
       )
     }
@@ -124,7 +124,7 @@ export class HttpApi implements Api {
               .map(Picture.fromJson)
             resolve(pictures)
           },
-          error: (request, status, error) => reject({status, error}),
+          error: (request, status, error) => reject({ status, error }),
         }),
       )
     }
@@ -134,14 +134,14 @@ export class HttpApi implements Api {
     }
   })(this)
 
-  picturesTaps = new (class {
+  taps = new (class {
     constructor(private readonly api: HttpApi) {}
 
-    post(pictureId: number, point: Vector): Promise<TapResult> {
+    post(pictureId: number, point: Vector): Promise<Tap> {
       return new Promise((resolve, reject) =>
         $.ajax({
           type: POST,
-          url: this.path(pictureId, ''),
+          url: this.path(''),
           timeout: this.api.timeout,
           headers: {
             Authorization: `Bearer ${this.api.tokens().accessToken}`,
@@ -152,39 +152,43 @@ export class HttpApi implements Api {
             y: point.y,
           }),
           success: (data: object) => {
-            const json = Utility.deepConvertToMap(data)
-            resolve(TapResult.fromJson(json))
+            const tap = data as Tap
+            resolve({ ...tap, createdAt: new Date(tap.createdAt) })
           },
-          error: (request, status, error) => reject({status, error}),
+          error: (request, status, error) => reject({ status, error }),
         }),
       )
     }
 
-    getAllByOwnerId(
-      pictureId: number,
-      ownerId: number,
-    ): Promise<Array<TapResult>> {
+    getAllWith(filter: {
+      pictureId: number
+      ownerId: number
+    }): Promise<Array<Tap>> {
       return new Promise((resolve, reject) =>
         $.ajax({
           type: GET,
-          url: this.path(pictureId, `?owner_id=${ownerId}`),
+          url: this.path(
+            `?owner_id=${filter.ownerId}&picture_id=${filter.pictureId}`,
+          ),
           timeout: this.api.timeout,
           headers: {
             Authorization: `Bearer ${this.api.tokens().accessToken}`,
           },
           success: (data: object) => {
             const results = $.makeArray(data as ArrayLike<any>)
-              .map(Utility.deepConvertToMap)
-              .map(TapResult.fromJson)
+              .map((tap) => tap as Tap)
+              .map((tap) => {
+                return { ...tap, createdAt: new Date(tap.createdAt) }
+              })
             resolve(results)
           },
-          error: (request, status, error) => reject({status, error}),
+          error: (request, status, error) => reject({ status, error }),
         }),
       )
     }
 
-    path(pictureId: number, suffix: string): string {
-      return `${this.api.path(`/pictures/${pictureId}/taps${suffix}`)}`
+    path(suffix: string): string {
+      return `${this.api.path(`/taps${suffix}`)}`
     }
   })(this)
 
@@ -210,7 +214,7 @@ export class HttpApi implements Api {
                 ),
               )
             },
-            error: (request, status, error) => reject({status, error}),
+            error: (request, status, error) => reject({ status, error }),
           }),
         )
       }
@@ -232,7 +236,7 @@ export class HttpApi implements Api {
                 ),
               )
             },
-            error: (request, status, error) => reject({status, error}),
+            error: (request, status, error) => reject({ status, error }),
           }),
         )
       }
@@ -257,7 +261,7 @@ export class HttpApi implements Api {
               new TokenPair(json.get('accessToken'), json.get('refreshToken')),
             )
           },
-          error: (request, status, error) => reject({status, error}),
+          error: (request, status, error) => reject({ status, error }),
         }),
       )
     }
@@ -274,7 +278,7 @@ export class HttpApi implements Api {
           success: (data: object) => {
             resolve()
           },
-          error: (request, status, error) => reject({status, error}),
+          error: (request, status, error) => reject({ status, error }),
         }),
       )
     }

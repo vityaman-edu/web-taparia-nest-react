@@ -8,6 +8,7 @@ import {
 import './PictureList.scss'
 import { api } from '../../../../state/api'
 import { useEffect } from 'react'
+import { fetchTaps } from '../../../../state/slice/tableSlice'
 
 export const PictureListItem = (p: { picture: Picture.Header }) => {
   const dispatch = useAppDispatch()
@@ -21,6 +22,7 @@ export const PictureListItem = (p: { picture: Picture.Header }) => {
           onClick={async () => {
             const picture = await api.pictures.getById(p.picture.id)
             dispatch(pictureExplorerAction.setCurrentPicture(picture))
+            dispatch(fetchTaps(picture.id))
             dispatch(
               pictureExplorerAction.setState(PictureExplorer.State.VIEWING),
             )

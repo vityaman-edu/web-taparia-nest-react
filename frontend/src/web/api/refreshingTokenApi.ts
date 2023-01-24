@@ -35,15 +35,15 @@ export class RefreshingTokenApi implements Api {
       ),
   }
 
-  picturesTaps = {
+  taps = {
     post: (pictureId: number, point: Vector) =>
       this.performOrRetryWithRefreshedTokens(() =>
-        this.origin.picturesTaps.post(pictureId, point),
+        this.origin.taps.post(pictureId, point),
       ),
 
-    getAllByOwnerId: (pictureId: number, ownerId: number) =>
+    getAllWith: (filter: { pictureId: number; ownerId: number }) =>
       this.performOrRetryWithRefreshedTokens(() =>
-        this.origin.picturesTaps.getAllByOwnerId(pictureId, ownerId),
+        this.origin.taps.getAllWith(filter),
       ),
   }
 
@@ -61,7 +61,9 @@ export class RefreshingTokenApi implements Api {
       this.performOrRetryWithRefreshedTokens(() => this.origin.auth.logout()),
   }
 
-  async performOrRetryWithRefreshedTokens<T>(action: () => Promise<T>): Promise<T> {
+  async performOrRetryWithRefreshedTokens<T>(
+    action: () => Promise<T>,
+  ): Promise<T> {
     try {
       const result = await action()
       return result

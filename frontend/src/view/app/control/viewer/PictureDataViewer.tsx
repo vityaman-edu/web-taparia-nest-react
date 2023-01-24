@@ -8,6 +8,7 @@ import { Picture } from "../../../../state/model/picture/picture"
 import "./PictureDataViewer.scss"
 import { useEffect } from "react"
 import { api } from "../../../../state/api"
+import { fetchTaps } from "../../../../state/slice/tableSlice"
 
 const parseFigure = (text: string) => 
   FigureFactory.fromJson(
@@ -83,6 +84,7 @@ export const PictureDataViewer = () => {
             dispatch(pictureExplorerAction.setCurrentPicture(
               new Picture(pictureId, user.id, name, figure)
             ))
+            dispatch(fetchTaps(pictureId))
             dispatch(pictureExplorerAction.setState(
               PictureExplorer.State.VIEWING
             ))

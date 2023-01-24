@@ -1,0 +1,22 @@
+@use '../../css/color';
+
+@mixin shadow {
+  $shadow: 3px;
+  box-shadow: $shadow $shadow color.$accent;
+}
+
+.RightPanel {
+  width: 100%;
+
+}
+
+.RightPanel-music {
+  padding: 'auto';
+  margin-top: 15%;
+  border: 'none';
+  width: '80%';
+  height: '10%';
+  display: 'flex';
+  flex-direction: 'column';
+  justify-content: 'center';
+}
