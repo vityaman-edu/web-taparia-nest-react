@@ -7,8 +7,6 @@ import { postTap } from '../../../state/slice/tableSlice'
 import { PictureExplorer } from '../../../state/slice/pictureExplorerSlice'
 
 const CANVAS_ID = 'battlefield'
-const CANVAS_WIDTH = 600
-const CANVAS_HEIGHT = 600
 
 const Canvas = () => {
   const [canvasSize, setCanvasSize] = useState(() => {

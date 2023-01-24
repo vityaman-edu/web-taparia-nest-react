@@ -10,10 +10,7 @@ import {
 import { Picture } from '../../../../state/model/picture/picture'
 import './PictureDataViewer.scss'
 import { useEffect } from 'react'
-import { api, userId } from '../../../../state/api'
-
-const parseFigure = (text: string) =>
-  FigureFactory.fromJson(Utility.deepConvertToMap(JSON.parse(text)))
+import { userId } from '../../../../state/api'
 
 export const PictureDataViewer = () => {
   const dispatch = useAppDispatch()
@@ -24,26 +21,10 @@ export const PictureDataViewer = () => {
   const [pictureName, setPictureName] = useState('')
   const [pictureData, setPictureData] = useState('')
 
-  const trySetCurrentPicture = (name: string, data: string) => {
-    dispatch(pictureExplorerAction.setOk())
-    try {
-      const figure = parseFigure(data)
-      const picture = new Picture(0, userId(), name, figure)
-      dispatch(
-        pictureExplorerAction.setCurrentPicture(
-          new Picture(0, userId(), picture.name, picture.content),
-        ),
-      )
-    } catch (e) {
-      dispatch(pictureExplorerAction.setError((e as any).message))
-      throw e
-    }
-  }
-
   useEffect(() => {
-    if (state == PictureExplorer.State.VIEWING) {
-      setPictureName(currentPicture!.name)
-      setPictureData(JSON.stringify(currentPicture!.content, null, 2))
+    if (currentPicture != null && state == PictureExplorer.State.VIEWING) {
+      setPictureName(currentPicture.name)
+      setPictureData(JSON.stringify(currentPicture.content, null, 2))
     }
   })
 
@@ -59,9 +40,10 @@ export const PictureDataViewer = () => {
           state == PictureExplorer.State.COMMITED
         }
         value={
-          state == PictureExplorer.State.VIEWING ||
-          state == PictureExplorer.State.COMMITED
-            ? currentPicture!.name
+          (state == PictureExplorer.State.VIEWING ||
+            state == PictureExplorer.State.COMMITED) &&
+          currentPicture != null
+            ? currentPicture.name
             : pictureName
         }
         onChange={(e) => setPictureName(e.target.value)}
@@ -80,8 +62,8 @@ export const PictureDataViewer = () => {
           state == PictureExplorer.State.COMMITED
         }
         value={
-          state == PictureExplorer.State.VIEWING
-            ? JSON.stringify(currentPicture!.content, null, 2)
+          state == PictureExplorer.State.VIEWING && currentPicture != null
+            ? JSON.stringify(currentPicture.content, null, 2)
             : pictureData
         }
         onChange={(e) => setPictureData(e.target.value)}
@@ -113,7 +95,12 @@ export const PictureDataViewer = () => {
           <Button
             content="Commit"
             onClick={async () => {
-              trySetCurrentPicture(pictureName, pictureData)
+              dispatch(
+                PictureExplorer.setParsedPictureDraft({
+                  name: pictureName,
+                  content: pictureData,
+                }),
+              )
               dispatch(
                 pictureExplorerAction.setState(PictureExplorer.State.COMMITED),
               )
@@ -122,7 +109,12 @@ export const PictureDataViewer = () => {
           <Button
             content="Sync"
             onClick={async () => {
-              trySetCurrentPicture(pictureName, pictureData)
+              dispatch(
+                PictureExplorer.setParsedPictureDraft({
+                  name: pictureName,
+                  content: pictureData,
+                }),
+              )
             }}
           />
         </>

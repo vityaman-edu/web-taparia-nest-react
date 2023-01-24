@@ -1,10 +1,14 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { Utility } from '../../web/api/utility'
 import { api, userId } from '../api'
-import { useAppDispatch } from '../hooks'
 import { Figure } from '../model/picture/figure/astraction/figure'
+import { FigureFactory } from '../model/picture/figure/figureFactory'
 import { Picture } from '../model/picture/picture'
 
 export namespace PictureExplorer {
+  const parseFigure = (text: string) =>
+    FigureFactory.fromJson(Utility.deepConvertToMap(JSON.parse(text)))
+
   export const fetchPictures = createAsyncThunk(
     'pictures/fetchPictures',
     async () => {
@@ -15,8 +19,23 @@ export namespace PictureExplorer {
 
   export const postPicture = createAsyncThunk(
     'pictures/postPicture',
-    async (p: { name: string; content: Figure }) => {
+    async (p: { name: string; content: Figure }, { dispatch }) => {
       const picture = await api.pictures.post(p.name, p.content)
+      dispatch(pictureExplorerAction.setCurrentPicture(picture))
+      return picture
+    },
+  )
+
+  export const setParsedPictureDraft = createAsyncThunk(
+    'pictures/setParsedPicture',
+    async (p: { name: string; content: string }, { dispatch }) => {
+      const figure = parseFigure(p.content)
+      const picture = new Picture(0, userId(), p.name, figure)
+      dispatch(
+        pictureExplorerAction.setCurrentPicture(
+          new Picture(0, userId(), picture.name, picture.content),
+        ),
+      )
       return picture
     },
   )
@@ -80,6 +99,19 @@ export namespace PictureExplorer {
           state.state = State.VIEWING
         })
         .addCase(postPicture.rejected, (state, action) => {
+          state.status = 'failed'
+          if (action.error.message) {
+            state.error = action.error.message
+          }
+        })
+        .addCase(setParsedPictureDraft.pending, (state, action) => {
+          state.status = 'loading'
+        })
+        .addCase(setParsedPictureDraft.fulfilled, (state, action) => {
+          state.status = 'succeeded'
+          state.currentPicture = action.payload
+        })
+        .addCase(setParsedPictureDraft.rejected, (state, action) => {
           state.status = 'failed'
           if (action.error.message) {
             state.error = action.error.message
