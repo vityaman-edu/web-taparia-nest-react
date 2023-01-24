@@ -4,10 +4,10 @@ import { useAppDispatch, useAppSelector } from "../../../../state/hooks"
 import { FigureFactory } from '../../../../state/model/picture/figure/figureFactory'
 import { Utility } from '../../../../web/api/utility'
 import { PictureExplorer, pictureExplorerAction } from "../../../../state/slice/pictureExplorerSlice"
-import { api } from "../../../../web/api/api"
 import { Picture } from "../../../../state/model/picture/picture"
 import "./PictureDataViewer.scss"
 import { useEffect } from "react"
+import { api } from "../../../../state/api"
 
 const parseFigure = (text: string) => 
   FigureFactory.fromJson(

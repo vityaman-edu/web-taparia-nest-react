@@ -20,9 +20,9 @@ export namespace Picture {
   export function fromJson(json: Map<string, any>) {
     return new Picture(
       json.get('id'),
-      json.get('owner_id'),
+      json.get('ownerId'),
       json.get('name'),
-      FigureFactory.fromJson(json.get('data'))
+      FigureFactory.fromJson(json.get('content'))
     ) 
   }
 }
