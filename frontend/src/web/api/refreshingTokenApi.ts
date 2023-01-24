@@ -61,13 +61,19 @@ export class RefreshingTokenApi implements Api {
       this.performOrRetryWithRefreshedTokens(() => this.origin.auth.logout()),
   }
 
-  performOrRetryWithRefreshedTokens<T>(action: () => Promise<T>): Promise<T> {
-    return action().catch((e) => {
-      console.error(e)
-      return this.origin.auth
-        .refresh()
-        .then(this.setTokens)
-        .then(() => action())
-    })
+  async performOrRetryWithRefreshedTokens<T>(action: () => Promise<T>): Promise<T> {
+    try {
+      const result = await action()
+      return result
+    } catch (e) {
+      if (e instanceof Object && e.hasOwnProperty('error')) {
+        if ((e as any).error == 'Unauthorized') {
+          await this.auth.refresh().then(this.setTokens)
+          const result = await action()
+          return result
+        }
+      }
+      throw e
+    }
   }
 }

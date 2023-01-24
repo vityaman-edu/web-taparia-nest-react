@@ -1,28 +1,31 @@
-import { useAppDispatch, useAppSelector } from "../../../../state/hooks"
+import { useAppDispatch, useAppSelector } from '../../../../state/hooks'
 import { Picture } from '../../../../state/model/picture/picture'
-import { Button } from "./../button/Button"
-import { PictureExplorer, pictureExplorerAction } from "../../../../state/slice/pictureExplorerSlice"
-import "./PictureList.scss"
-import { api } from "../../../../state/api"
+import { Button } from './../button/Button'
+import {
+  PictureExplorer,
+  pictureExplorerAction,
+} from '../../../../state/slice/pictureExplorerSlice'
+import './PictureList.scss'
+import { api } from '../../../../state/api'
+import { useEffect } from 'react'
 
-export const PictureListItem = (p: {
-  picture: Picture.Header
-}) => {
+export const PictureListItem = (p: { picture: Picture.Header }) => {
   const dispatch = useAppDispatch()
-  
+
   return (
     <tr className="PictureListItem">
       <td>{p.picture.name}</td>
       <td>
-        <Button 
+        <Button
           content="Load"
           onClick={async () => {
             const picture = await api.pictures.getById(p.picture.id)
             dispatch(pictureExplorerAction.setCurrentPicture(picture))
-            dispatch(pictureExplorerAction.setState(
-              PictureExplorer.State.VIEWING
-            ))
-          }}/>
+            dispatch(
+              pictureExplorerAction.setState(PictureExplorer.State.VIEWING),
+            )
+          }}
+        />
       </td>
     </tr>
   )
@@ -30,24 +33,20 @@ export const PictureListItem = (p: {
 
 export const PictureList = () => {
   const dispatch = useAppDispatch()
-  const pictures = useAppSelector(state => 
-    state.pictureExplorer.pictureHeaders
+  const pictures = useAppSelector(
+    (state) => state.pictureExplorer.pictureHeaders,
   )
-  const userId = useAppSelector(state => 
-    state.user.id
-  )
-  
-  api.pictures.getAllByOwnerId(userId).then(pictures => 
-    pictures.map(picture => 
-      dispatch(pictureExplorerAction.addPicture(picture))
-    )
-  )
+  const picturesStatus = useAppSelector((state) => state.pictureExplorer.status)
 
-  const items = pictures.map(picture =>
-    <PictureListItem 
-      key={picture.id} 
-      picture={picture}/>
-  )
+  useEffect(() => {
+    if (picturesStatus == 'idle') {
+      dispatch(PictureExplorer.fetchPictures())
+    }
+  }, [picturesStatus, dispatch])
+
+  const items = pictures.map((picture) => (
+    <PictureListItem key={picture.id} picture={picture} />
+  ))
 
   return (
     <div className="PictureList">
@@ -58,9 +57,7 @@ export const PictureList = () => {
             <th>Do</th>
           </tr>
         </thead>
-        <tbody>
-          {items}
-        </tbody>
+        <tbody>{items}</tbody>
       </table>
     </div>
   )

@@ -8,7 +8,6 @@ import { TapResult } from './dto/tapResult'
 import { Api } from './api'
 import { LocalCredentials } from './dto/local.credentials'
 import { TokenPair } from './dto/token.pair'
-import { request } from 'http'
 
 const GET = 'GET'
 const POST = 'POST'
@@ -281,7 +280,7 @@ export class HttpApi implements Api {
     }
 
     path(suffix: string): string {
-      return `${this.api.host}/api/auth/${suffix}`
+      return `${this.api.host}/api/auth${suffix}`
     }
   })(this)
 
