@@ -6,12 +6,15 @@ import { api } from '../../state/api'
 import { useAppSelector } from '../../state/hooks'
 import { toast } from 'react-hot-toast'
 import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const App = () => {
   const explorerStatus = useAppSelector((state) => state.pictureExplorer.status)
   const explorerError = useAppSelector((state) => state.pictureExplorer.error)
   const tableError = useAppSelector((state) => state.table.error)
   const tableStatus = useAppSelector((state) => state.table.status)
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (explorerStatus == 'failed') {
@@ -36,6 +39,14 @@ const App = () => {
             </li>
             <li className="nav-inline">
               <a href="https://github.com/vityaman">Contact</a>
+            </li>
+            <li className="nav-inline">
+              <a href=""onClick={async (e) => {
+                e.preventDefault()
+                await api.auth.logout()
+                toast.success('Logged out!')
+                navigate('/auth/logIn')
+              }}>Logout</a>
             </li>
           </ul>
         </nav>

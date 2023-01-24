@@ -29,7 +29,7 @@ export class HttpApi implements Api {
           url: this.path('/securePing'),
           timeout: this.api.timeout,
           headers: {
-            'Authorization': `Bearer ${this.api.tokens().accessToken}`,
+            Authorization: `Bearer ${this.api.tokens().accessToken}`,
           },
           success: resolve,
           error: (http) => {
@@ -80,7 +80,7 @@ export class HttpApi implements Api {
           url: this.path(''),
           timeout: this.api.timeout,
           headers: {
-            'Authorization': `Bearer ${this.api.tokens().accessToken}`,
+            Authorization: `Bearer ${this.api.tokens().accessToken}`,
           },
           contentType: 'application/json',
           data: JSON.stringify({
@@ -105,7 +105,7 @@ export class HttpApi implements Api {
           url: this.path(`/${pictureId}`),
           timeout: this.api.timeout,
           headers: {
-            'Authorization': `Bearer ${this.api.tokens().accessToken}`,
+            Authorization: `Bearer ${this.api.tokens().accessToken}`,
           },
           success: (data: object) => {
             const json = Utility.deepConvertToMap(data)
@@ -126,9 +126,9 @@ export class HttpApi implements Api {
           url: this.path(`?owner_id=${ownerId}`),
           timeout: this.api.timeout,
           headers: {
-            'Authorization': `Bearer ${this.api.tokens().accessToken}`,
+            Authorization: `Bearer ${this.api.tokens().accessToken}`,
           },
-          success: (data: object) => {  
+          success: (data: object) => {
             const pictures = $.makeArray(data as ArrayLike<any>)
               .map(Utility.deepConvertToMap)
               .map(Picture.fromJson)
@@ -156,7 +156,7 @@ export class HttpApi implements Api {
           url: this.path(''),
           timeout: this.api.timeout,
           headers: {
-            'Authorization': `Bearer ${this.api.tokens().accessToken}`,
+            Authorization: `Bearer ${this.api.tokens().accessToken}`,
           },
           contentType: 'application/json',
           data: JSON.stringify({
@@ -187,7 +187,7 @@ export class HttpApi implements Api {
           ),
           timeout: this.api.timeout,
           headers: {
-            'Authorization': `Bearer ${this.api.tokens().accessToken}`,
+            Authorization: `Bearer ${this.api.tokens().accessToken}`,
           },
           success: (data: object) => {
             const results = $.makeArray(data as ArrayLike<any>)
@@ -296,9 +296,10 @@ export class HttpApi implements Api {
           url: this.path(`/logout`),
           timeout: this.api.timeout,
           headers: {
-            'Authorization': `Bearer ${this.api.tokens().accessToken}`,
+            Authorization: `Bearer ${this.api.tokens().accessToken}`,
           },
           success: (data: object) => {
+            console.log('aaa')
             resolve()
           },
           error: (http) => {

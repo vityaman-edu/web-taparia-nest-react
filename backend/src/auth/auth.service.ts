@@ -67,7 +67,7 @@ export class AuthService {
     if (account == null) {
       throw new ForbiddenException('User not found')
     }
-    if (account.refreshTokenHash == null) {
+    if (!account.refreshTokenHash) {
       throw new ForbiddenException('Refresh token was expired')
     }
     const refreshTokenMatches = bcrypt.compare(
@@ -89,14 +89,14 @@ export class AuthService {
     id: number
     email: string
   }): Promise<TokenPair> {
-    const DURATION_15_MINUTES = 15 * 60
+    const DURATION_1_MINUTE = 1 * 60
     const DURATION_7_DAYS = 7 * 24 * 60 * 60
     return {
       accessToken: this.jwtService.sign(
         { sub: account.id, email: account.email },
         {
           secret: this.config.jwtAccessTokenSecret(),
-          expiresIn: DURATION_15_MINUTES,
+          expiresIn: DURATION_1_MINUTE,
         },
       ),
       refreshToken: this.jwtService.sign(

@@ -29,7 +29,7 @@ export const api = new RefreshingTokenApi(
   new HttpApi('http://localhost:3333', 1500, tokens),
   setTokens,
   (error: any) => {
-    if (error.json.statusCode == 401) {
+    if (error.json.statusCode == 401 || error.json.statusCode == 403) {
       window.location.replace(
         window.location.href.replace('/app', '/auth/signIn'),
       )

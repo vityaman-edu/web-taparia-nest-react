@@ -62,8 +62,7 @@ export class RefreshingTokenApi implements Api {
     },
     refresh: () => this.origin.auth.refresh(),
 
-    logout: () =>
-      this.performOrRetryWithRefreshedTokens(() => this.origin.auth.logout()),
+    logout: () => this.origin.auth.logout(),
   }
 
   async performOrRetryWithRefreshedTokens<T>(
@@ -74,7 +73,7 @@ export class RefreshingTokenApi implements Api {
       return result
     } catch (e) {
       const error = e as any
-      if (error.json.statusCode == 401) {
+      if (error.json.statusCode == 401 || error.json.statusCode == 403) {
         try {
           await this.auth.refresh().then(this.setTokens)
           const result = await action()
