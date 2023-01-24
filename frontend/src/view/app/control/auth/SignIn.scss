@@ -1,0 +1,49 @@
+@use '../../../css/color';
+@use '../../../css/common';
+
+@mixin shadow {
+  $shadow: 3px;
+  box-shadow: $shadow $shadow color.$accent;
+}
+
+.Login {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.Login-form {
+  padding: 2%;
+  background: color.$background-light;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  height: fit-content;
+  width: fit-content;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.Login-form-input {
+  font-family: monospace;
+  border: 1px solid #000000;
+  padding-left: 2%;
+  padding-right: 2%;
+  padding-top: 1%;
+  padding-bottom: 1%;
+  
+  margin: 1%;
+  background-color: color.$background-light;
+}
+
+.Login-hello {
+  text-align: center;
+  color: color.$text-on-light
+}
+
+.Login-form-input:hover {
+  @include shadow;
+}
