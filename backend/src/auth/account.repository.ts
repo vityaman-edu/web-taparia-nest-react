@@ -15,6 +15,16 @@ export class AccountRepository {
           passwordHash: account.passwordHash,
         },
       })
+      .then((account) =>
+        this.prisma.profile
+          .create({
+            data: {
+              name: account.email,
+              account_id: account.id,
+            },
+          })
+          .then(() => account),
+      )
       .catch((e) => {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
           if (e.code === 'P2002') {

@@ -48,9 +48,12 @@ li.nav-no-bullet {
 }
 
 .App-columns {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
+  @media screen and (min-width: 800px) {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+  
 }
 
 .App-columns > * > h2 {

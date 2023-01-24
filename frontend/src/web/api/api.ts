@@ -13,7 +13,7 @@ export interface Api {
     getByName: (username: string) => Promise<User>
   }
   pictures: {
-    post: (name: string, data: Figure) => Promise<number>
+    post: (name: string, data: Figure) => Promise<Picture>
     getById: (pictureId: number) => Promise<Picture>
     getAllByOwnerId: (ownerId: number) => Promise<Array<Picture>>
   }

@@ -26,10 +26,15 @@ export class HttpApi implements Api {
       return new Promise((resolve, reject) =>
         $.ajax({
           type: GET,
-          url: this.path('/ping'),
+          url: this.path('/securePing'),
           timeout: this.api.timeout,
+          headers: {
+            'Authorization': `Bearer ${this.api.tokens().accessToken}`,
+          },
           success: resolve,
-          error: (request, status, error) => reject({ status, error }),
+          error: (http) => {
+            reject({ json: http.responseJSON })
+          },
         }),
       )
     }
@@ -53,7 +58,9 @@ export class HttpApi implements Api {
             const user = User.fromJson(json)
             resolve(user)
           },
-          error: (request, status, error) => reject({ status, error }),
+          error: (http) => {
+            reject({ json: http.responseJSON })
+          },
         }),
       )
     }
@@ -66,14 +73,14 @@ export class HttpApi implements Api {
   pictures = new (class {
     constructor(private readonly api: HttpApi) {}
 
-    post(name: string, content: Figure): Promise<number> {
+    post(name: string, content: Figure): Promise<Picture> {
       return new Promise((resolve, reject) =>
         $.ajax({
           type: POST,
           url: this.path(''),
           timeout: this.api.timeout,
           headers: {
-            Authorization: `Bearer ${this.api.tokens().accessToken}`,
+            'Authorization': `Bearer ${this.api.tokens().accessToken}`,
           },
           contentType: 'application/json',
           data: JSON.stringify({
@@ -82,9 +89,11 @@ export class HttpApi implements Api {
           }),
           success: (data: object) => {
             const json = Utility.deepConvertToMap(data)
-            resolve(json.get('picture_id'))
+            resolve(Picture.fromJson(json))
           },
-          error: (request, status, error) => reject({ status, error }),
+          error: (http) => {
+            reject({ json: http.responseJSON })
+          },
         }),
       )
     }
@@ -96,14 +105,16 @@ export class HttpApi implements Api {
           url: this.path(`/${pictureId}`),
           timeout: this.api.timeout,
           headers: {
-            Authorization: `Bearer ${this.api.tokens().accessToken}`,
+            'Authorization': `Bearer ${this.api.tokens().accessToken}`,
           },
           success: (data: object) => {
             const json = Utility.deepConvertToMap(data)
             const picture = Picture.fromJson(json)
             resolve(picture)
           },
-          error: (request, status, error) => reject({ status, error }),
+          error: (http) => {
+            reject({ json: http.responseJSON })
+          },
         }),
       )
     }
@@ -115,16 +126,17 @@ export class HttpApi implements Api {
           url: this.path(`?owner_id=${ownerId}`),
           timeout: this.api.timeout,
           headers: {
-            Authorization: `Bearer ${this.api.tokens().accessToken}`,
+            'Authorization': `Bearer ${this.api.tokens().accessToken}`,
           },
-          success: (data: object) => {
-            console.log(data)
+          success: (data: object) => {  
             const pictures = $.makeArray(data as ArrayLike<any>)
               .map(Utility.deepConvertToMap)
               .map(Picture.fromJson)
             resolve(pictures)
           },
-          error: (request, status, error) => reject({ status, error }),
+          error: (http) => {
+            reject({ json: http.responseJSON })
+          },
         }),
       )
     }
@@ -144,7 +156,7 @@ export class HttpApi implements Api {
           url: this.path(''),
           timeout: this.api.timeout,
           headers: {
-            Authorization: `Bearer ${this.api.tokens().accessToken}`,
+            'Authorization': `Bearer ${this.api.tokens().accessToken}`,
           },
           contentType: 'application/json',
           data: JSON.stringify({
@@ -156,7 +168,9 @@ export class HttpApi implements Api {
             const tap = data as Tap
             resolve({ ...tap, createdAt: new Date(tap.createdAt) })
           },
-          error: (request, status, error) => reject({ status, error }),
+          error: (http) => {
+            reject({ json: http.responseJSON })
+          },
         }),
       )
     }
@@ -173,7 +187,7 @@ export class HttpApi implements Api {
           ),
           timeout: this.api.timeout,
           headers: {
-            Authorization: `Bearer ${this.api.tokens().accessToken}`,
+            'Authorization': `Bearer ${this.api.tokens().accessToken}`,
           },
           success: (data: object) => {
             const results = $.makeArray(data as ArrayLike<any>)
@@ -183,7 +197,9 @@ export class HttpApi implements Api {
               })
             resolve(results)
           },
-          error: (request, status, error) => reject({ status, error }),
+          error: (http) => {
+            reject({ json: http.responseJSON })
+          },
         }),
       )
     }
@@ -215,7 +231,9 @@ export class HttpApi implements Api {
                 ),
               )
             },
-            error: (request, status, error) => reject({ status, error }),
+            error: (http) => {
+              reject({ json: http.responseJSON })
+            },
           }),
         )
       }
@@ -237,7 +255,9 @@ export class HttpApi implements Api {
                 ),
               )
             },
-            error: (request, status, error) => reject({ status, error }),
+            error: (http) => {
+              reject({ json: http.responseJSON })
+            },
           }),
         )
       }
@@ -262,7 +282,9 @@ export class HttpApi implements Api {
               new TokenPair(json.get('accessToken'), json.get('refreshToken')),
             )
           },
-          error: (request, status, error) => reject({ status, error }),
+          error: (http) => {
+            reject({ json: http.responseJSON })
+          },
         }),
       )
     }
@@ -274,12 +296,14 @@ export class HttpApi implements Api {
           url: this.path(`/logout`),
           timeout: this.api.timeout,
           headers: {
-            Authorization: `Bearer ${this.api.tokens().accessToken}`,
+            'Authorization': `Bearer ${this.api.tokens().accessToken}`,
           },
           success: (data: object) => {
             resolve()
           },
-          error: (request, status, error) => reject({ status, error }),
+          error: (http) => {
+            reject({ json: http.responseJSON })
+          },
         }),
       )
     }

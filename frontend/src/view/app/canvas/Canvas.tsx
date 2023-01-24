@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../../state/hooks'
 import { Canvas as Field } from './lib/canvas'
 import { Vector } from '../../../state/model/picture/figure/astraction/vector'
@@ -10,6 +10,11 @@ const CANVAS_WIDTH = 600
 const CANVAS_HEIGHT = 600
 
 const Canvas = () => {
+  const [canvasSize, setCanvasSize] = useState(() => {
+    const { innerWidth: width, innerHeight: height } = window
+    return width > 800 ? 600 : 300
+  })
+
   const dispatch = useAppDispatch()
   const picture = useAppSelector(
     (state) => state.pictureExplorer.currentPicture,
@@ -17,17 +22,17 @@ const Canvas = () => {
   const taps = useAppSelector((state) => state.table.taps)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const field = new Field(() => canvasRef.current as HTMLCanvasElement, {
-    x: CANVAS_WIDTH / 2,
-    y: CANVAS_HEIGHT / 2,
+    x: canvasSize / 2,
+    y: canvasSize / 2,
   } as Vector)
 
   useEffect(() => {
     field.setMouseClickListener((pos) => {
-      dispatch(postTap({ pictureId: picture.id, pos: pos }))
+      dispatch(postTap({ pictureId: picture!.id, pos: pos }))
     })
     field.clear()
     if (picture != null) {
-      field.redraw(picture.figure)
+      field.redraw(picture.content)
       taps.forEach((tap) =>
         field.tap(
           new Vector(tap.x, tap.y),
@@ -35,7 +40,11 @@ const Canvas = () => {
         ),
       )
     }
-    console.log('canvas was updated')
+  })
+  
+  window.addEventListener('resize', () => {
+    const { innerWidth: width, innerHeight: height } = window
+    setCanvasSize(width > 800 ? 600 : 300)
   })
 
   return (
@@ -44,8 +53,8 @@ const Canvas = () => {
         <canvas
           ref={canvasRef}
           id={CANVAS_ID}
-          width={CANVAS_WIDTH}
-          height={CANVAS_HEIGHT}
+          width={canvasSize}
+          height={canvasSize}
           className="shadow-on-hover"
         ></canvas>
       </div>

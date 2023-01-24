@@ -1,3 +1,4 @@
+import { IsNotEmpty, IsString } from 'class-validator'
 import { Figure } from './figure/astraction/figure'
 
 export class Picture {
@@ -8,6 +9,8 @@ export class Picture {
 }
 
 export class PictureDraft {
+  @IsNotEmpty()
+  @IsString()
   readonly name: string
   readonly content: Figure
 }

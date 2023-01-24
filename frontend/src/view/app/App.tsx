@@ -1,9 +1,28 @@
 import Control from './control/Control'
-import Canvas  from './canvas/Canvas'
+import Canvas from './canvas/Canvas'
 import './App.scss'
 import RightPanel from './right/RightPanel'
+import { api } from '../../state/api'
+import { useAppSelector } from '../../state/hooks'
+import { toast } from 'react-hot-toast'
+import { useEffect } from 'react'
 
 const App = () => {
+  const explorerStatus = useAppSelector((state) => state.pictureExplorer.status)
+  const explorerError = useAppSelector((state) => state.pictureExplorer.error)
+  const tableError = useAppSelector((state) => state.table.error)
+  const tableStatus = useAppSelector((state) => state.table.status)
+
+  useEffect(() => {
+    if (explorerStatus == 'failed') {
+      toast.error(explorerError)
+    }
+    if (tableStatus == 'failed') {
+      toast.error(tableError)
+    }
+  })
+
+  api.ops.ping()
   return (
     <div className="App">
       <header className="App-header">
@@ -26,14 +45,12 @@ const App = () => {
           <h1>Welcome to Taparia</h1>
         </div>
         <div className="App-columns">
-          <Control/>
-          <Canvas/>
-          <RightPanel/>
+          <Control />
+          <Canvas />
+          <RightPanel />
         </div>
       </div>
-      <footer className="App-footer">
-      
-      </footer>
+      <footer className="App-footer"></footer>
     </div>
   )
 }

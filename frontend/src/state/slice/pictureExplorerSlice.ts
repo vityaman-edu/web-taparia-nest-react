@@ -1,35 +1,35 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { api } from '../api'
-import { Vector } from '../model/picture/figure/astraction/vector'
-import { Ellipse } from '../model/picture/figure/primitive/ellipse'
+import { api, userId } from '../api'
+import { Figure } from '../model/picture/figure/astraction/figure'
 import { Picture } from '../model/picture/picture'
-import { store } from '../store'
 
 export namespace PictureExplorer {
   export const fetchPictures = createAsyncThunk(
     'pictures/fetchPictures',
     async () => {
-      const pictures = await api.pictures.getAllByOwnerId(
-        store.getState().user.id,
-      )
+      const pictures = await api.pictures.getAllByOwnerId(userId())
       return pictures
+    },
+  )
+
+  export const postPicture = createAsyncThunk(
+    'pictures/postPicture',
+    async (p: { name: string; content: Figure }) => {
+      const picture = await api.pictures.post(p.name, p.content)
+      return picture
     },
   )
 
   export enum State {
     EDITING,
     VIEWING,
+    COMMITED
   }
 
   export const Slice = createSlice({
     name: 'pictureExplorerSlice',
     initialState: {
-      currentPicture: new Picture(
-        -1,
-        -1,
-        'unnamed',
-        new Ellipse({ x: 0, y: 0 } as Vector, { x: 0, y: 0 } as Vector),
-      ),
+      currentPicture: null as Picture | null,
       pictureHeaders: [] as Picture.Header[],
       state: PictureExplorer.State.EDITING,
       status: 'idle' as 'idle' | 'loading' | 'succeeded' | 'failed',
@@ -39,20 +39,20 @@ export namespace PictureExplorer {
       setCurrentPicture(state, action: PayloadAction<Picture>): void {
         const picture = action.payload
         state.currentPicture = picture
-        if (picture.id == -1) return
-        if (!state.pictureHeaders.some((pic) => pic.id == picture.id)) {
-          state.pictureHeaders.push(picture)
-        }
-      },
-      addPicture(state, action: PayloadAction<Picture.Header>): void {
-        const picture = action.payload
-        if (!state.pictureHeaders.some((pic) => pic.id == picture.id)) {
-          state.pictureHeaders.push(picture)
-        }
+        state.error = ''
+        state.status = 'succeeded'
       },
       setState(state, action: PayloadAction<State>) {
         state.state = action.payload
       },
+      setError(state, action: PayloadAction<string>) {
+        state.status = 'failed'
+        state.error = action.payload
+      },
+      setOk(state) {
+        state.error = ''
+        state.status = 'succeeded'
+      }
     },
     extraReducers(builder) {
       builder
@@ -64,6 +64,20 @@ export namespace PictureExplorer {
           state.pictureHeaders = action.payload
         })
         .addCase(fetchPictures.rejected, (state, action) => {
+          state.status = 'failed'
+          if (action.error.message) {
+            state.error = action.error.message
+          }
+        })
+        .addCase(postPicture.pending, (state, action) => {
+          state.status = 'loading'
+        })
+        .addCase(postPicture.fulfilled, (state, action) => {
+          state.status = 'succeeded'
+          state.pictureHeaders.push(action.payload)
+          state.currentPicture = action.payload
+        })
+        .addCase(postPicture.rejected, (state, action) => {
           state.status = 'failed'
           if (action.error.message) {
             state.error = action.error.message

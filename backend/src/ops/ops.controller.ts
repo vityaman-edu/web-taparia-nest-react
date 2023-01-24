@@ -11,7 +11,7 @@ export class OpsController {
     return { message: 'pong' }
   }
 
-  @Get('/security')
+  @Get('/securePing')
   @HttpCode(HttpStatus.OK)
   security(@AuthPayload() auth: AuthInfo) {
     return { message: `Welcome, user with id ${auth.accountId}!` }

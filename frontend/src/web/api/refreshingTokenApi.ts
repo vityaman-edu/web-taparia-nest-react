@@ -8,14 +8,19 @@ export class RefreshingTokenApi implements Api {
   constructor(
     private origin: Api,
     private setTokens: (tokens: TokenPair) => void,
+    private onFail: (e: any) => void,
   ) {}
 
   ops = {
-    ping: () => this.origin.ops.ping(),
+    ping: () =>
+      this.performOrRetryWithRefreshedTokens(() => this.origin.ops.ping()),
   }
 
   users = {
-    getByName: (username: string) => this.origin.users.getByName(username),
+    getByName: (username: string) =>
+      this.performOrRetryWithRefreshedTokens(() =>
+        this.origin.users.getByName(username),
+      ),
   }
 
   pictures = {
@@ -68,14 +73,18 @@ export class RefreshingTokenApi implements Api {
       const result = await action()
       return result
     } catch (e) {
-      if (e instanceof Object && e.hasOwnProperty('error')) {
-        if ((e as any).error == 'Unauthorized') {
+      const error = e as any
+      if (error.json.statusCode == 401) {
+        try {
           await this.auth.refresh().then(this.setTokens)
           const result = await action()
           return result
+        } catch (e) {
+          this.onFail(error)
+          throw error
         }
       }
-      throw e
+      throw error
     }
   }
 }

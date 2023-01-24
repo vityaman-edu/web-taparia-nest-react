@@ -6,7 +6,7 @@ export class Picture {
     public readonly id: number,
     public readonly ownerId: number,
     public readonly name: string,
-    public readonly figure: Figure
+    public readonly content: Figure
   ) {}
 }
 

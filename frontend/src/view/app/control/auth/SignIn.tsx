@@ -28,7 +28,7 @@ const SingIn = () => {
     const tokens = await toast.promise(method(credentials), {
       loading: 'Wait a bit...',
       success: <b>Enjoy!</b>,
-      error: () => <b>Oh, man...</b>,
+      error: (e) => <b>Oh, chel... {e.json.message.join ? e.json.message.join(' and ') : e.json.message}...</b>,
     })
     setTokens(tokens)
     navigate('/app')
@@ -50,7 +50,7 @@ const SingIn = () => {
         <input
           style={
             state == State.SignUp &&
-            (password != repeatPassword || password == '')
+            (password != repeatPassword || password == '' || password.includes(' '))
               ? { borderColor: '#FF0000' }
               : undefined
           }
