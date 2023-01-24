@@ -1,3 +1,8 @@
+export class Point {
+  readonly x: number
+  readonly y: number
+}
+
 export class Vector {
   constructor(public readonly x: number, public readonly y: number) {}
 

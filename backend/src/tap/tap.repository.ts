@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
-import { Tap } from './model/tap'
+import { Tap, TapPrecreated } from './model/tap'
 
 @Injectable()
 export class TapRepository {
@@ -13,5 +13,9 @@ export class TapRepository {
         pictureId: filter.pictureId,
       },
     })
+  }
+
+  create(tap: TapPrecreated): Promise<Tap> {
+    return this.prisma.tap.create({ data: tap })
   }
 }

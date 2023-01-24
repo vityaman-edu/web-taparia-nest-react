@@ -1,4 +1,4 @@
-import { Vector } from '../astraction/vector'
+import { Point, Vector } from '../astraction/vector'
 import { Figure } from '../astraction/figure'
 
 export class Ellipse extends Figure {
@@ -6,7 +6,7 @@ export class Ellipse extends Figure {
     super('ellipse')
   }
 
-  contains(point: Vector): boolean {
+  contains(point: Point): boolean {
     return (
       square(point.x - this.center.x) / square(this.radius.x) +
         square(point.y - this.center.y) / square(this.radius.y) <=

@@ -28,6 +28,6 @@ export class TapController {
 
   @Post()
   post(@AuthPayload() auth: AuthInfo, @Body() tap: TapDraft) {
-    
+    return this.tapService.registerTap(auth.accountId, tap)
   }
 }

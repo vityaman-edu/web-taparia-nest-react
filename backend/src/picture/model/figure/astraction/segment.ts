@@ -1,7 +1,7 @@
-import { Vector } from './vector'
+import { Point } from './vector'
 
 export class Segment {
-  constructor(public start: Vector, public end: Vector) {}
+  constructor(public start: Point, public end: Point) {}
 
   /** https://stackoverflow.com/questions/217578/
    * how-can-i-determine-whether-a-2d-point-is-within-a-polygon */

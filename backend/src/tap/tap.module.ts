@@ -3,10 +3,10 @@ import { TapService } from './tap.service'
 import { TapController } from './tap.controller'
 import { PrismaModule } from 'src/prisma/prisma.module'
 import { TapRepository } from './tap.repository'
-import { PictureService } from 'src/picture/picture.service'
+import { PictureModule } from 'src/picture/picture.module'
 
 @Module({
-  imports: [PrismaModule, PictureService],
+  imports: [PrismaModule, PictureModule],
   providers: [TapService, TapRepository],
   controllers: [TapController],
 })

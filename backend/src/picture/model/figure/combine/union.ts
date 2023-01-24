@@ -1,5 +1,5 @@
 import { Figure } from '../astraction/figure'
-import { Vector } from '../astraction/vector'
+import { Point } from '../astraction/vector'
 import { FigureAggregator } from './figure.aggregator'
 
 export class Union extends FigureAggregator {
@@ -7,7 +7,7 @@ export class Union extends FigureAggregator {
     super('union', children)
   }
 
-  contains(point: Vector): boolean {
+  contains(point: Point): boolean {
     return !this.children.some((child) => child.contains(point))
   }
 }

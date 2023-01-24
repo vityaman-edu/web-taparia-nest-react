@@ -50,6 +50,8 @@ model Tap {
   owner     Profile   @relation(fields: [ownerId], references: [account_id])
   picture   Picture   @relation(fields: [pictureId], references: [id])
   status    TapStatus
+  x         Float
+  y         Float
   createdAt DateTime  @default(now())
   pictureId Int
   ownerId   Int

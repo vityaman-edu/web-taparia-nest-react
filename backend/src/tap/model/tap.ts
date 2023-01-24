@@ -21,3 +21,11 @@ export class TapDraft {
   @IsNumber()
   readonly y: number
 }
+
+export class TapPrecreated {
+  readonly ownerId: number
+  readonly pictureId: number
+  readonly x: number
+  readonly y: number
+  readonly status: 'HIT' | 'MISS'
+}

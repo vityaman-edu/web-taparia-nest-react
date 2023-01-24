@@ -1,15 +1,15 @@
-import { Vector } from '../astraction/vector'
+import { Vector, Point } from '../astraction/vector'
 import { Figure } from '../astraction/figure'
 import { Segment } from '../astraction/segment'
 
 export class Polygon extends Figure {
   private static CORNER = new Vector(999, 999)
 
-  constructor(public readonly points: Array<Vector>) {
+  constructor(public readonly points: Array<Point>) {
     super('polygon')
   }
 
-  contains(point: Vector) {
+  contains(point: Point) {
     const ray = new Segment(point, Polygon.CORNER)
     return this.sides().filter((side) => side.intersects(ray)).length % 2 == 1
   }
