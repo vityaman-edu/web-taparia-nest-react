@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { PictureNotFoundError } from './error/picture.not.found.error'
-import { Figure } from './model/figure/figure'
+import { Figure } from './model/figure2/figure'
 import { Picture, PictureDraft } from './model/picture'
 
 @Injectable()
