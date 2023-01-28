@@ -226,8 +226,8 @@ export class HttpApi implements Api {
               const json = Utility.deepConvertToMap(data)
               resolve(
                 new TokenPair(
-                  json.get('accessToken'),
-                  json.get('refreshToken'),
+                  json.get('access'),
+                  json.get('refresh'),
                 ),
               )
             },
@@ -250,8 +250,8 @@ export class HttpApi implements Api {
               const json = Utility.deepConvertToMap(data)
               resolve(
                 new TokenPair(
-                  json.get('accessToken'),
-                  json.get('refreshToken'),
+                  json.get('access'),
+                  json.get('refresh'),
                 ),
               )
             },
@@ -279,7 +279,7 @@ export class HttpApi implements Api {
           success: (data: object) => {
             const json = Utility.deepConvertToMap(data)
             resolve(
-              new TokenPair(json.get('accessToken'), json.get('refreshToken')),
+              new TokenPair(json.get('access'), json.get('refresh')),
             )
           },
           error: (http) => {

@@ -14,14 +14,14 @@ export class AuthConfig {
   }
 
   accessTokenTtlSeconds(): number {
-    return this.configService.get('AUTH_ACCESS_TOKEN_TTL_SECONDS')
+    return parseInt(this.configService.get('AUTH_ACCESS_TOKEN_TTL_SECONDS'))
   }
 
   refreshTokenTtlSeconds(): number {
-    return this.configService.get('AUTH_REFRESH_TOKEN_TTL_SECONDS')
+    return parseInt(this.configService.get('AUTH_REFRESH_TOKEN_TTL_SECONDS'))
   }
 
   hashSalt(): number {
-    return this.configService.get('AUTH_HASH_SALT')
+    return parseInt(this.configService.get('AUTH_HASH_SALT'))
   }
 }
