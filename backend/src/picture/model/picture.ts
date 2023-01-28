@@ -12,5 +12,6 @@ export class PictureDraft {
   @IsNotEmpty()
   @IsString()
   readonly name: string
+
   readonly content: Figure
 }
