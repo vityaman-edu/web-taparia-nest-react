@@ -44,6 +44,7 @@ const App = () => {
               <a href=""onClick={async (e) => {
                 e.preventDefault()
                 await api.auth.logout()
+                // TODO: remove token from local storage
                 toast.success('Logged out!')
                 navigate('/auth/logIn')
               }}>Logout</a>
