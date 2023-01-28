@@ -4,14 +4,14 @@ import { Strategy, ExtractJwt } from 'passport-jwt'
 import { AuthConfig } from '../auth.config'
 import { JwtPayload } from './jwt.payload'
 
-export const jwtAccessTokenStrategy = 'jwt-access'
+export const JWT_ACCESS_TOKEN_STRATEGY = 'jwt-access'
 
 @Injectable()
 export class AccessTokenStrategy extends PassportStrategy(
   Strategy,
-  jwtAccessTokenStrategy,
+  JWT_ACCESS_TOKEN_STRATEGY,
 ) {
-  constructor(private config: AuthConfig) {
+  constructor(config: AuthConfig) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: config.jwtAccessTokenSecret(),

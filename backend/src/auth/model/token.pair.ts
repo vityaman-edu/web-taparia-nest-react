@@ -1,4 +1,4 @@
-export class TokenPair {
-  readonly accessToken: string
-  readonly refreshToken: string
+export class Tokens {
+  readonly access: string
+  readonly refresh: string
 }

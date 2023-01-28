@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
+import { PrismaKnownErrorCode } from 'src/prisma/prisma.known.error.code'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { PictureNotFoundError } from './error/picture.not.found.error'
 import { Figure } from './model/figure2/figure'
@@ -27,8 +28,9 @@ export class PictureRepository {
       .then(convert)
       .catch((e) => {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
-          if (e.code === 'P2025') {
-            throw new PictureNotFoundError(id)
+          switch (e.code) {
+            case PrismaKnownErrorCode.NotFound:
+              throw new PictureNotFoundError(id)
           }
         }
         throw e
@@ -42,6 +44,7 @@ export class PictureRepository {
   }
 }
 
+// TODO: this 'as unknown as smth' looks like a mess
 const convert = (pic: {
   id: number
   ownerId: number

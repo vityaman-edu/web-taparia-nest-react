@@ -1,23 +1,20 @@
 import { ExecutionContext, Injectable } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import { AuthGuard } from '@nestjs/passport'
-import { PublicEndpointMarker } from '../decorator/public.endpoint.decorator'
-import { jwtAccessTokenStrategy } from '../jwt/access.token.strategy'
+import { PUBLIC_ENDPOINT_KEY } from '../decorator/public.endpoint.decorator'
+import { JWT_ACCESS_TOKEN_STRATEGY } from '../jwt/access.token.strategy'
 
 @Injectable()
-export class AccessTokenGuard extends AuthGuard(jwtAccessTokenStrategy) {
+export class AccessTokenGuard extends AuthGuard(JWT_ACCESS_TOKEN_STRATEGY) {
   constructor(private reflector: Reflector) {
     super()
   }
 
   canActivate(context: ExecutionContext) {
-    const isPublic = this.reflector.getAllAndOverride(PublicEndpointMarker, [
+    const isPublic = this.reflector.getAllAndOverride(PUBLIC_ENDPOINT_KEY, [
       context.getHandler(),
       context.getClass(),
     ])
-    if (isPublic) {
-      return true
-    }
-    return super.canActivate(context)
+    return isPublic || super.canActivate(context)
   }
 }

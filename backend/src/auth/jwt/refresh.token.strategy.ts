@@ -4,14 +4,14 @@ import { Request } from 'express'
 import { Injectable } from '@nestjs/common'
 import { AuthConfig } from '../auth.config'
 
-export const jwtRefrestTokenStrategy = 'jwt-refresh'
+export const JWT_REFRESH_TOKEN_STRATEGY = 'jwt-refresh'
 
 @Injectable()
 export class RefrestTokenStrategy extends PassportStrategy(
   Strategy,
-  jwtRefrestTokenStrategy,
+  JWT_REFRESH_TOKEN_STRATEGY,
 ) {
-  constructor(private config: AuthConfig) {
+  constructor(config: AuthConfig) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: config.jwtRefreshTokenSecret(),
