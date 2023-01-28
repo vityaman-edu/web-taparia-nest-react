@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
-import { api, setTokens } from '../../../../state/api'
+import { api } from '../../../../state/api'
+import { globalState } from '../../../../state/globalState'
 import { LocalCredentials } from '../../../../web/api/dto/local.credentials'
 import Button from '../button/Button'
 import './SignIn.scss'
@@ -30,7 +31,7 @@ const SingIn = () => {
       success: <b>Enjoy!</b>,
       error: (e) => <b>Oh, chel... {e.json.message.join ? e.json.message.join(' and ') : e.json.message}...</b>,
     })
-    setTokens(tokens)
+    globalState.setTokens(tokens)
     navigate('/app')
   }
 

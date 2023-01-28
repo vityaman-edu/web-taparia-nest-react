@@ -1,4 +1,3 @@
-export class TokenPair {
-  constructor(readonly accessToken: string, readonly refreshToken: string) {}
-  
+export class Tokens {
+  constructor(readonly access: string, readonly refresh: string) {}
 }

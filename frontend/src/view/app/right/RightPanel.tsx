@@ -9,18 +9,7 @@ const RightPanel = () => {
       <Table />
       </div>
       <div className="RightPanel-music">
-        <iframe
-          width="80%"
-          height="10%"
-          src="https://music.yandex.com/iframe/#track/109958639/24367796"
-        >
-          Слушайте{' '}
-          <a href="https://music.yandex.com/album/24367796/track/109958639">
-            O.M.S.K. Phonk
-          </a>{' '}
-          — <a href="https://music.yandex.com/artist/3414566">Смешарики</a> на
-          Яндекс Музыке
-        </iframe>
+        
       </div>
     </div>
   )

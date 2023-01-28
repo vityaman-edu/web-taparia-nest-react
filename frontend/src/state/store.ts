@@ -14,7 +14,7 @@ export const store = configureStore({
     pictureExplorer: PictureExplorer.Slice.reducer,
     table: tableSlice.reducer,
   },
-  middleware: [thunkMiddleware, logger] as const,
+  middleware: [thunkMiddleware] as const,
 })
 
 export type RootState = ReturnType<typeof store.getState>

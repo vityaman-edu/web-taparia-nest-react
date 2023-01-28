@@ -1,13 +1,14 @@
 import { Figure } from '../../state/model/picture/figure/astraction/figure'
 import { Vector } from '../../state/model/picture/figure/astraction/vector'
 import { Api } from './api'
+import { ApiError } from './dto/apiError'
 import { LocalCredentials } from './dto/local.credentials'
-import { TokenPair } from './dto/token.pair'
+import { Tokens } from './dto/token.pair'
 
 export class RefreshingTokenApi implements Api {
   constructor(
     private origin: Api,
-    private setTokens: (tokens: TokenPair) => void,
+    private setTokens: (tokens: Tokens) => void,
     private onFail: (e: any) => void,
   ) {}
 
@@ -72,8 +73,9 @@ export class RefreshingTokenApi implements Api {
       const result = await action()
       return result
     } catch (e) {
-      const error = e as any
-      console.log(error)
+      console.log(e)
+      const error = e as ApiError
+      
       if (error.json.statusCode == 401 || error.json.statusCode == 403) {
         try {
           await this.auth.refresh().then(this.setTokens)

@@ -1,14 +1,15 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { api, userId } from '../api'
+import { api } from '../api'
+import { globalState } from '../globalState'
 import { Vector } from '../model/picture/figure/astraction/vector'
-import { Tap } from '../model/picture/Tap'
+import { Tap } from '../model/picture/tap'
 
 export const fetchTaps = createAsyncThunk(
   'taps/fetchTaps',
   async (pictureId: number) => {
     const taps = await api.taps.getAllWith({
       pictureId: pictureId,
-      ownerId: userId(),
+      ownerId: globalState.getUserId(),
     })
     return taps
   },

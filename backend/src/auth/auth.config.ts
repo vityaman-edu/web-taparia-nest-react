@@ -22,6 +22,6 @@ export class AuthConfig {
   }
 
   hashSalt(): number {
-    return parseInt(this.configService.get('AUTH_HASH_SALT'))
+    return parseInt(this.configService.get('AUTH_HASH_ROUNDS'))
   }
 }
