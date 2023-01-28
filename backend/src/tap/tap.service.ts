@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common'
 import { FigureFactory } from 'src/picture/model/figure/figure.factory'
 import { PictureService } from 'src/picture/picture.service'
-import { Tap, TapDraft } from './model/tap'
+import { Tap, TapDraft, TapStatus } from './model/tap'
 import { TapRepository } from './tap.repository'
 
 @Injectable()
@@ -24,7 +24,7 @@ export class TapService {
 
   async registerTap(ownerId: number, tap: TapDraft): Promise<Tap> {
     const picture = await this.pictureService.getById(tap.pictureId)
-    if (!picture) {
+    if (picture == null) {
       throw new NotFoundException(`Picture with id ${tap.pictureId} not found`)
     }
     if (picture.ownerId != ownerId) {
@@ -33,7 +33,7 @@ export class TapService {
       )
     }
     const figure = FigureFactory.fromObject(picture.content)
-    const status = figure.contains(tap) ? 'HIT' : 'MISS'
+    const status = figure.contains(tap) ? TapStatus.Hit : TapStatus.Miss
     return this.tapRepository.create({ ...tap, ownerId, status })
   }
 }

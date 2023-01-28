@@ -1,12 +1,17 @@
 import { IsInt, IsNumber, IsPositive } from 'class-validator'
 
+export enum TapStatus {
+  Hit = 'HIT',
+  Miss = 'MISS',
+}
+
 export class Tap {
   readonly id: number
   readonly ownerId: number
   readonly pictureId: number
   readonly x: number
   readonly y: number
-  readonly status: 'HIT' | 'MISS'
+  readonly status: TapStatus
   readonly createdAt: Date
 }
 
@@ -27,5 +32,5 @@ export class TapPrecreated {
   readonly pictureId: number
   readonly x: number
   readonly y: number
-  readonly status: 'HIT' | 'MISS'
+  readonly status: TapStatus
 }
