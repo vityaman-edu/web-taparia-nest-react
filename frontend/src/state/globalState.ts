@@ -26,7 +26,6 @@ export class GlobalState {
   }
 
   setTokens(tokens: Tokens): void {
-    console.log(tokens)
     this.tokens = tokens
     this.origin.setItem(REFRESH_TOKEN_KEY, `"${this.tokens.refresh}"`)
   }

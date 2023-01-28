@@ -73,9 +73,7 @@ export class RefreshingTokenApi implements Api {
       const result = await action()
       return result
     } catch (e) {
-      console.log(e)
       const error = e as ApiError
-      
       if (error.json.statusCode == 401 || error.json.statusCode == 403) {
         try {
           await this.auth.refresh().then(this.setTokens)
