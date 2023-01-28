@@ -1,6 +1,6 @@
 import { PipeTransform, Injectable, BadRequestException } from '@nestjs/common'
+import { Figure } from '../model/figure/astraction/figure'
 import { FigureFactory } from '../model/figure/figure.factory'
-import { Figure } from '../model/figure2/figure'
 import { PictureDraft } from '../model/picture'
 
 type Input = {

@@ -1,16 +1,12 @@
 import { useState } from 'react'
 import { Button } from './../button/Button'
 import { useAppDispatch, useAppSelector } from '../../../../state/hooks'
-import { FigureFactory } from '../../../../state/model/picture/figure/figureFactory'
-import { Utility } from '../../../../web/api/utility'
 import {
   PictureExplorer,
   pictureExplorerAction,
 } from '../../../../state/slice/pictureExplorerSlice'
-import { Picture } from '../../../../state/model/picture/picture'
 import './PictureDataViewer.scss'
 import { useEffect } from 'react'
-import { userId } from '../../../../state/api'
 
 export const PictureDataViewer = () => {
   const dispatch = useAppDispatch()

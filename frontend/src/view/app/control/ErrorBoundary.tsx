@@ -7,7 +7,6 @@ export class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error: any, errorInfo: React.ErrorInfo): void {
-    
     toast.error(error.json.message)
   }
 

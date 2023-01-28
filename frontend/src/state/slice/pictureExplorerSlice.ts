@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Utility } from '../../web/api/utility'
-import { api, userId } from '../api'
+import { api } from '../api'
+import { globalState } from '../globalState'
 import { Figure } from '../model/picture/figure/astraction/figure'
 import { FigureFactory } from '../model/picture/figure/figureFactory'
 import { Picture } from '../model/picture/picture'
@@ -12,7 +13,9 @@ export namespace PictureExplorer {
   export const fetchPictures = createAsyncThunk(
     'pictures/fetchPictures',
     async () => {
-      const pictures = await api.pictures.getAllByOwnerId(userId())
+      const pictures = await api.pictures.getAllByOwnerId(
+        globalState.getUserId(),
+      )
       return pictures
     },
   )
@@ -30,10 +33,10 @@ export namespace PictureExplorer {
     'pictures/setParsedPicture',
     async (p: { name: string; content: string }, { dispatch }) => {
       const figure = parseFigure(p.content)
-      const picture = new Picture(0, userId(), p.name, figure)
+      const picture = new Picture(0, globalState.getUserId(), p.name, figure)
       dispatch(
         pictureExplorerAction.setCurrentPicture(
-          new Picture(0, userId(), picture.name, picture.content),
+          new Picture(0, globalState.getUserId(), picture.name, picture.content),
         ),
       )
       return picture

@@ -1,6 +1,6 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common'
 
-export type AuthInfo = {
+export interface AuthInfo {
   readonly accountId: number
   readonly refreshToken: string
 }

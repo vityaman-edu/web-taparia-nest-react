@@ -1,5 +1,4 @@
 import { SetMetadata } from '@nestjs/common'
 
-// TODO: maybe rename to AvailableWithoutAccessToken
-export const PublicEndpointMarker = 'isPublicEndpoint'
-export const PublicEndpoint = () => SetMetadata(PublicEndpointMarker, true)
+export const PUBLIC_ENDPOINT_KEY = 'isPublicEndpoint'
+export const PublicEndpoint = () => SetMetadata(PUBLIC_ENDPOINT_KEY, true)

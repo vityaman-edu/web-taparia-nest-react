@@ -6,8 +6,8 @@ import { Utility } from './utility'
 import { User } from './dto/user'
 import { Api } from './api'
 import { LocalCredentials } from './dto/local.credentials'
-import { TokenPair } from './dto/token.pair'
-import { Tap } from '../../state/model/picture/Tap'
+import { Tokens } from './dto/token.pair'
+import { Tap } from '../../state/model/picture/tap'
 
 const GET = 'GET'
 const POST = 'POST'
@@ -16,7 +16,7 @@ export class HttpApi implements Api {
   constructor(
     private readonly host: string,
     private readonly timeout: number,
-    private readonly tokens: () => TokenPair,
+    private readonly tokens: () => Tokens,
   ) {}
 
   ops = new (class {
@@ -29,10 +29,11 @@ export class HttpApi implements Api {
           url: this.path('/securePing'),
           timeout: this.api.timeout,
           headers: {
-            Authorization: `Bearer ${this.api.tokens().accessToken}`,
+            Authorization: `Bearer ${this.api.tokens().access}`,
           },
           success: resolve,
           error: (http) => {
+
             reject({ json: http.responseJSON })
           },
         }),
@@ -59,6 +60,7 @@ export class HttpApi implements Api {
             resolve(user)
           },
           error: (http) => {
+
             reject({ json: http.responseJSON })
           },
         }),
@@ -80,7 +82,7 @@ export class HttpApi implements Api {
           url: this.path(''),
           timeout: this.api.timeout,
           headers: {
-            Authorization: `Bearer ${this.api.tokens().accessToken}`,
+            Authorization: `Bearer ${this.api.tokens().access}`,
           },
           contentType: 'application/json',
           data: JSON.stringify({
@@ -92,6 +94,7 @@ export class HttpApi implements Api {
             resolve(Picture.fromJson(json))
           },
           error: (http) => {
+
             reject({ json: http.responseJSON })
           },
         }),
@@ -105,7 +108,7 @@ export class HttpApi implements Api {
           url: this.path(`/${pictureId}`),
           timeout: this.api.timeout,
           headers: {
-            Authorization: `Bearer ${this.api.tokens().accessToken}`,
+            Authorization: `Bearer ${this.api.tokens().access}`,
           },
           success: (data: object) => {
             const json = Utility.deepConvertToMap(data)
@@ -113,6 +116,7 @@ export class HttpApi implements Api {
             resolve(picture)
           },
           error: (http) => {
+
             reject({ json: http.responseJSON })
           },
         }),
@@ -126,7 +130,7 @@ export class HttpApi implements Api {
           url: this.path(`?owner_id=${ownerId}`),
           timeout: this.api.timeout,
           headers: {
-            Authorization: `Bearer ${this.api.tokens().accessToken}`,
+            Authorization: `Bearer ${this.api.tokens().access}`,
           },
           success: (data: object) => {
             const pictures = $.makeArray(data as ArrayLike<any>)
@@ -135,6 +139,7 @@ export class HttpApi implements Api {
             resolve(pictures)
           },
           error: (http) => {
+
             reject({ json: http.responseJSON })
           },
         }),
@@ -156,7 +161,7 @@ export class HttpApi implements Api {
           url: this.path(''),
           timeout: this.api.timeout,
           headers: {
-            Authorization: `Bearer ${this.api.tokens().accessToken}`,
+            Authorization: `Bearer ${this.api.tokens().access}`,
           },
           contentType: 'application/json',
           data: JSON.stringify({
@@ -169,6 +174,7 @@ export class HttpApi implements Api {
             resolve({ ...tap, createdAt: new Date(tap.createdAt) })
           },
           error: (http) => {
+
             reject({ json: http.responseJSON })
           },
         }),
@@ -187,7 +193,7 @@ export class HttpApi implements Api {
           ),
           timeout: this.api.timeout,
           headers: {
-            Authorization: `Bearer ${this.api.tokens().accessToken}`,
+            Authorization: `Bearer ${this.api.tokens().access}`,
           },
           success: (data: object) => {
             const results = $.makeArray(data as ArrayLike<any>)
@@ -198,6 +204,7 @@ export class HttpApi implements Api {
             resolve(results)
           },
           error: (http) => {
+
             reject({ json: http.responseJSON })
           },
         }),
@@ -214,7 +221,7 @@ export class HttpApi implements Api {
     local = new (class {
       constructor(private readonly api: HttpApi) {}
 
-      signUp(credentials: LocalCredentials): Promise<TokenPair> {
+      signUp(credentials: LocalCredentials): Promise<Tokens> {
         return new Promise((resolve, reject) =>
           $.ajax({
             type: POST,
@@ -224,21 +231,17 @@ export class HttpApi implements Api {
             data: JSON.stringify(credentials),
             success: (data: object) => {
               const json = Utility.deepConvertToMap(data)
-              resolve(
-                new TokenPair(
-                  json.get('accessToken'),
-                  json.get('refreshToken'),
-                ),
-              )
+              resolve(new Tokens(json.get('access'), json.get('refresh')))
             },
             error: (http) => {
+  
               reject({ json: http.responseJSON })
             },
           }),
         )
       }
 
-      signIn(credentials: LocalCredentials): Promise<TokenPair> {
+      signIn(credentials: LocalCredentials): Promise<Tokens> {
         return new Promise((resolve, reject) =>
           $.ajax({
             type: POST,
@@ -248,14 +251,10 @@ export class HttpApi implements Api {
             data: JSON.stringify(credentials),
             success: (data: object) => {
               const json = Utility.deepConvertToMap(data)
-              resolve(
-                new TokenPair(
-                  json.get('accessToken'),
-                  json.get('refreshToken'),
-                ),
-              )
+              resolve(new Tokens(json.get('access'), json.get('refresh')))
             },
             error: (http) => {
+  
               reject({ json: http.responseJSON })
             },
           }),
@@ -267,22 +266,21 @@ export class HttpApi implements Api {
       }
     })(this.api)
 
-    refresh(): Promise<TokenPair> {
+    refresh(): Promise<Tokens> {
       return new Promise((resolve, reject) =>
         $.ajax({
           type: POST,
           url: this.path(`/refresh`),
           timeout: this.api.timeout,
           headers: {
-            Authorization: `Bearer ${this.api.tokens().refreshToken}`,
+            Authorization: `Bearer ${this.api.tokens().refresh}`,
           },
           success: (data: object) => {
             const json = Utility.deepConvertToMap(data)
-            resolve(
-              new TokenPair(json.get('accessToken'), json.get('refreshToken')),
-            )
+            resolve(new Tokens(json.get('access'), json.get('refresh')))
           },
           error: (http) => {
+
             reject({ json: http.responseJSON })
           },
         }),
@@ -296,13 +294,13 @@ export class HttpApi implements Api {
           url: this.path(`/logout`),
           timeout: this.api.timeout,
           headers: {
-            Authorization: `Bearer ${this.api.tokens().accessToken}`,
+            Authorization: `Bearer ${this.api.tokens().access}`,
           },
-          success: (data: object) => {
-            console.log('aaa')
+          success: () => {
             resolve()
           },
           error: (http) => {
+
             reject({ json: http.responseJSON })
           },
         }),

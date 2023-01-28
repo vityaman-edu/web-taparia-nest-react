@@ -50,7 +50,6 @@ export class Canvas {
   }
 
   setMouseClickListener(callback: MouseEventCallback): Canvas {
-    console.log('click')
     this.canvas().onclick = ((e: MouseEvent) => {
       const mousePosition = new Vector(e.clientX, e.clientY)
       callback(this.translate(mousePosition))

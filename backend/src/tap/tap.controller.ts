@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  ForbiddenException,
   Get,
   ParseIntPipe,
   Post,
@@ -20,6 +21,9 @@ export class TapController {
     @Query('picture_id', ParseIntPipe) pictureId: number,
     @Query('owner_id', ParseIntPipe) ownerId: number,
   ) {
+    if (auth.accountId != ownerId) {
+      throw new ForbiddenException('You can get only your own taps')
+    }
     return this.tapService.getTapsWhere({
       pictureId: pictureId,
       ownerId: ownerId,

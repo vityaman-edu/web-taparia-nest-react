@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
+import { PrismaKnownErrorCode } from 'src/prisma/prisma.known.error.code'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { AccountAlreadyExistsError } from './error/account.already.exists.error'
 
@@ -27,8 +28,9 @@ export class AccountRepository {
       )
       .catch((e) => {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
-          if (e.code === 'P2002') {
-            throw new AccountAlreadyExistsError(account.email)
+          switch (e.code) {
+            case PrismaKnownErrorCode.UninqueConstaintFailed:
+              throw new AccountAlreadyExistsError(account.email)
           }
         }
         throw e

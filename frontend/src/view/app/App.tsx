@@ -25,7 +25,6 @@ const App = () => {
     }
   })
 
-  api.ops.ping()
   return (
     <div className="App">
       <header className="App-header">

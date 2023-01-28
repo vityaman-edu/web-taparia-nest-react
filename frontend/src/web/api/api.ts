@@ -1,10 +1,11 @@
 import { Figure } from '../../state/model/picture/figure/astraction/figure'
 import { Vector } from '../../state/model/picture/figure/astraction/vector'
 import { Picture } from '../../state/model/picture/picture'
-import { Tap } from '../../state/model/picture/Tap'
+import { Tap } from '../../state/model/picture/tap'
 import { LocalCredentials } from './dto/local.credentials'
-import { TokenPair } from './dto/token.pair'
+import { Tokens } from './dto/token.pair'
 import { User } from './dto/user'
+
 export interface Api {
   ops: {
     ping: () => Promise<void>
@@ -26,10 +27,10 @@ export interface Api {
   }
   auth: {
     local: {
-      signUp: (credentials: LocalCredentials) => Promise<TokenPair>
-      signIn: (credentials: LocalCredentials) => Promise<TokenPair>
+      signUp: (credentials: LocalCredentials) => Promise<Tokens>
+      signIn: (credentials: LocalCredentials) => Promise<Tokens>
     }
-    refresh: () => Promise<TokenPair>
+    refresh: () => Promise<Tokens>
     logout: () => Promise<void>
   }
 }

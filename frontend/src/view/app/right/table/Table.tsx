@@ -1,5 +1,5 @@
 import { useAppSelector } from '../../../../state/hooks'
-import { Tap } from '../../../../state/model/picture/Tap'
+import { Tap } from '../../../../state/model/picture/tap'
 import './Table.scss'
 
 const TableItem = (p: { tap: Tap }) => {
