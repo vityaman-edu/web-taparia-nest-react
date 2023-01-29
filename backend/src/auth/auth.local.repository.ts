@@ -17,6 +17,7 @@ export class AuthLocalRepository {
           passwordHash: entry.passwordHash,
         },
       })
+      .then(this.convert)
       .catch((e) => {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
           switch (e.code) {
@@ -26,7 +27,6 @@ export class AuthLocalRepository {
         }
         throw e
       })
-      .then(this.convert)
   }
 
   findById(id: number): Promise<AuthLocal> {
@@ -34,7 +34,7 @@ export class AuthLocalRepository {
       .findUnique({
         where: { id: id },
       })
-      .then(this.convert)
+      .then((e) => (e ? this.convert(e) : null))
   }
 
   findByEmail(email: string): Promise<AuthLocal> {
@@ -42,7 +42,7 @@ export class AuthLocalRepository {
       .findUnique({
         where: { email: email },
       })
-      .then(this.convert)
+      .then((e) => (e ? this.convert(e) : null))
   }
 
   private convert(e: AuthLocalEntity) {
