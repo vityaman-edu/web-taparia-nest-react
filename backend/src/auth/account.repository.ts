@@ -63,13 +63,15 @@ export class AccountRepository {
     })
   }
 
-  private convert(entity: AccountEntity): Account {
-    return {
-      ...entity,
-      authId: {
-        method: authMethodFromString(entity.authMethod),
-        external: entity.externalId,
-      },
-    }
+  private convert(entity: AccountEntity | null): Account | null {
+    return entity
+      ? {
+          ...entity,
+          authId: {
+            method: authMethodFromString(entity.authMethod),
+            external: entity.externalId,
+          },
+        }
+      : null
   }
 }

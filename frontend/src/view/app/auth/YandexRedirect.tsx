@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../../../state/api'
@@ -9,25 +10,28 @@ const extractToken = () =>
 export default function YandexRedirect() {
   const navigate = useNavigate()
   const token = extractToken()
-  if (token != null) {
-    toast.promise(
-      api.auth.yandex
-        .signIn(token)
-        .then((tokens) => globalState.setTokens(tokens))
-        .then(() => navigate('/app')),
-      {
-        loading: 'Authentication in progress...',
-        success: <b>Yandex ID authentication complite!</b>,
-        error: (e) => (
-          <b>
-            Error:
-            {e.json.message.join
-              ? e.json.message.join(' and ')
-              : e.json.message}
-          </b>
-        ),
-      },
-    )
-  }
+
+  useEffect(() => {
+    if (token != null) {
+      toast.promise(
+        api.auth.yandex
+          .signIn(token)
+          .then((tokens) => globalState.setTokens(tokens))
+          .then(() => navigate('/app')),
+        {
+          loading: 'Authentication in progress...',
+          success: <b>Ready!</b>,
+          error: (e) => (
+            <b>
+              Error:
+              {e.json.message.join
+                ? e.json.message.join(' and ')
+                : e.json.message}
+            </b>
+          ),
+        },
+      )
+    }
+  })
   return <></>
 }

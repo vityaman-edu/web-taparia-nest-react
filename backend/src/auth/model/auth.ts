@@ -41,9 +41,11 @@ export class AuthLocal extends AuthLocalDraft implements AuthEntry {
 }
 
 export class AuthExternal implements AuthEntry {
-  readonly method: AuthMethod
-  readonly id: number
-  readonly login: string
+  constructor(
+    readonly method: AuthMethod,
+    readonly id: number,
+    readonly login: string,
+  ) {}
 
   toAuthId(): AuthId {
     return {

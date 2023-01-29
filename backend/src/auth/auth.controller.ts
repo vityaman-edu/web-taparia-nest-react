@@ -19,12 +19,15 @@ import { AccountNotFoundError } from './error/account.not.found.error'
 import { AccessDeniedError } from './error/access.denied.error'
 import { AuthLocalService } from './auth.local.service'
 import { YandexCredentials } from './model/yandex.credentials'
+import { AuthYandexService } from './auth.yandex.service'
+import { Tokens } from './model/token.pair'
 
 @Controller('/api/auth')
 export class AuthController {
   constructor(
     private authService: AuthService,
     private authLocalService: AuthLocalService,
+    private authYandexService: AuthYandexService,
   ) {}
 
   @PublicEndpoint()
@@ -58,9 +61,8 @@ export class AuthController {
   @PublicEndpoint()
   @Post('yandex/signIn')
   @HttpCode(HttpStatus.OK)
-  yandexSignIn(@Body() credentials: YandexCredentials) {
-    console.debug('yandexSignIn')
-    console.debug(credentials)
+  yandexSignIn(@Body() credentials: YandexCredentials): Promise<Tokens> {
+    return this.authYandexService.signIn(credentials)
   }
 
   @PublicEndpoint()

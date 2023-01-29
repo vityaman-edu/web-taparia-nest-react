@@ -33,11 +33,13 @@ model AuthLocal {
   @@map("auth_local")
 }
 
+// TODO: delete as it is unused
 model AuthExternal {
-  id     Int        @id
+  id     Int       
   method AuthMethod
   login  String
 
+  @@id([id, method])
   @@map("auth_external")
 }
 
