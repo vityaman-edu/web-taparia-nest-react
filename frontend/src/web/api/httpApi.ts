@@ -33,7 +33,6 @@ export class HttpApi implements Api {
           },
           success: resolve,
           error: (http) => {
-
             reject({ json: http.responseJSON })
           },
         }),
@@ -60,7 +59,6 @@ export class HttpApi implements Api {
             resolve(user)
           },
           error: (http) => {
-
             reject({ json: http.responseJSON })
           },
         }),
@@ -94,7 +92,6 @@ export class HttpApi implements Api {
             resolve(Picture.fromJson(json))
           },
           error: (http) => {
-
             reject({ json: http.responseJSON })
           },
         }),
@@ -116,7 +113,6 @@ export class HttpApi implements Api {
             resolve(picture)
           },
           error: (http) => {
-
             reject({ json: http.responseJSON })
           },
         }),
@@ -139,7 +135,6 @@ export class HttpApi implements Api {
             resolve(pictures)
           },
           error: (http) => {
-
             reject({ json: http.responseJSON })
           },
         }),
@@ -174,7 +169,6 @@ export class HttpApi implements Api {
             resolve({ ...tap, createdAt: new Date(tap.createdAt) })
           },
           error: (http) => {
-
             reject({ json: http.responseJSON })
           },
         }),
@@ -204,7 +198,6 @@ export class HttpApi implements Api {
             resolve(results)
           },
           error: (http) => {
-
             reject({ json: http.responseJSON })
           },
         }),
@@ -218,6 +211,7 @@ export class HttpApi implements Api {
 
   auth = new (class {
     constructor(private readonly api: HttpApi) {}
+
     local = new (class {
       constructor(private readonly api: HttpApi) {}
 
@@ -234,7 +228,6 @@ export class HttpApi implements Api {
               resolve(new Tokens(json.get('access'), json.get('refresh')))
             },
             error: (http) => {
-  
               reject({ json: http.responseJSON })
             },
           }),
@@ -254,7 +247,6 @@ export class HttpApi implements Api {
               resolve(new Tokens(json.get('access'), json.get('refresh')))
             },
             error: (http) => {
-  
               reject({ json: http.responseJSON })
             },
           }),
@@ -263,6 +255,35 @@ export class HttpApi implements Api {
 
       path(suffix: string): string {
         return `${this.api.host}/api/auth/local${suffix}`
+      }
+    })(this.api)
+
+    yandex = new (class {
+      constructor(private readonly api: HttpApi) {}
+
+      signIn(token: string): Promise<Tokens> {
+        return new Promise((resolve, reject) =>
+          $.ajax({
+            type: POST,
+            url: this.path(`/signIn`),
+            timeout: this.api.timeout,
+            contentType: 'application/json',
+            data: JSON.stringify({
+              token: token,
+            }),
+            success: (data: object) => {
+              const json = Utility.deepConvertToMap(data)
+              resolve(new Tokens(json.get('access'), json.get('refresh')))
+            },
+            error: (http) => {
+              reject({ json: http.responseJSON })
+            },
+          }),
+        )
+      }
+
+      path(suffix: string): string {
+        return `${this.api.host}/api/auth/yandex${suffix}`
       }
     })(this.api)
 
@@ -280,7 +301,6 @@ export class HttpApi implements Api {
             resolve(new Tokens(json.get('access'), json.get('refresh')))
           },
           error: (http) => {
-
             reject({ json: http.responseJSON })
           },
         }),
@@ -300,7 +320,6 @@ export class HttpApi implements Api {
             resolve()
           },
           error: (http) => {
-
             reject({ json: http.responseJSON })
           },
         }),

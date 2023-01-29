@@ -18,6 +18,7 @@ import { AccountAlreadyExistsError } from './error/account.already.exists.error'
 import { AccountNotFoundError } from './error/account.not.found.error'
 import { AccessDeniedError } from './error/access.denied.error'
 import { AuthLocalService } from './auth.local.service'
+import { YandexCredentials } from './model/yandex.credentials'
 
 @Controller('/api/auth')
 export class AuthController {
@@ -52,6 +53,14 @@ export class AuthController {
       }
       throw e
     })
+  }
+
+  @PublicEndpoint()
+  @Post('yandex/signIn')
+  @HttpCode(HttpStatus.OK)
+  yandexSignIn(@Body() credentials: YandexCredentials) {
+    console.debug('yandexSignIn')
+    console.debug(credentials)
   }
 
   @PublicEndpoint()

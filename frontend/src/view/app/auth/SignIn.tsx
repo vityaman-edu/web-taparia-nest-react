@@ -19,11 +19,6 @@ const SingIn = () => {
   const [password, setPassword] = useState('')
   const [repeatPassword, setRepeatPassword] = useState('')
 
-  const token = /access_token=([^&]+)/.exec(document.location.hash)?.at(1)
-  if (token != null) {
-    console.log(token)
-  }
-
   const doAuth = async () => {
     if (state == State.SignUp && password != repeatPassword) {
       throw new Error('Passwords do not match')
