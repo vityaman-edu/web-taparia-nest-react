@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
-import { api } from '../../../../state/api'
-import { globalState } from '../../../../state/globalState'
-import { LocalCredentials } from '../../../../web/api/dto/local.credentials'
-import Button from '../button/Button'
+import { api } from '../../../state/api'
+import { globalState } from '../../../state/globalState'
+import { LocalCredentials } from '../../../web/api/dto/local.credentials'
+import Button from '../control/button/Button'
 import './SignIn.scss'
 
 enum State {
@@ -19,6 +19,11 @@ const SingIn = () => {
   const [password, setPassword] = useState('')
   const [repeatPassword, setRepeatPassword] = useState('')
 
+  const token = /access_token=([^&]+)/.exec(document.location.hash)?.at(1)
+  if (token != null) {
+    console.log(token)
+  }
+
   const doAuth = async () => {
     if (state == State.SignUp && password != repeatPassword) {
       throw new Error('Passwords do not match')
@@ -29,7 +34,13 @@ const SingIn = () => {
     const tokens = await toast.promise(method(credentials), {
       loading: 'Wait a bit...',
       success: <b>Enjoy!</b>,
-      error: (e) => <b>Oh, chel... {e.json.message.join ? e.json.message.join(' and ') : e.json.message}...</b>,
+      error: (e) => (
+        <b>
+          Oh, chel...{' '}
+          {e.json.message.join ? e.json.message.join(' and ') : e.json.message}
+          ...
+        </b>
+      ),
     })
     globalState.setTokens(tokens)
     navigate('/app')
@@ -51,7 +62,9 @@ const SingIn = () => {
         <input
           style={
             state == State.SignUp &&
-            (password != repeatPassword || password == '' || password.includes(' '))
+            (password != repeatPassword ||
+              password == '' ||
+              password.includes(' '))
               ? { borderColor: '#FF0000' }
               : undefined
           }
@@ -84,6 +97,16 @@ const SingIn = () => {
           onClick={() =>
             setState(state == State.SignIn ? State.SignUp : State.SignIn)
           }
+        />
+
+        <Button
+          content="Yandex ID"
+          onClick={() => {
+            const clientId = 'dd47b516d10843ddb0f19fe656cf9fd5'
+            window.location.replace(
+              `https://oauth.yandex.ru/authorize?response_type=token&client_id=${clientId}`,
+            )
+          }}
         />
       </div>
     </div>

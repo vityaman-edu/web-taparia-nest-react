@@ -5,7 +5,7 @@ import { Provider } from 'react-redux'
 import { Routes, Route, BrowserRouter } from 'react-router-dom'
 import { store } from './state/store'
 import App from './view/app/App'
-import SingIn from './view/app/control/auth/SignIn'
+import SingIn from './view/app/auth/SignIn'
 import { ErrorBoundary } from './view/app/control/ErrorBoundary'
 import './view/css/index.scss'
 
