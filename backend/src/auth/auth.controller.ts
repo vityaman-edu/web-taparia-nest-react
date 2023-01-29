@@ -17,16 +17,20 @@ import { RefreshTokenGuard } from './guard/refresh.token.guard'
 import { AccountAlreadyExistsError } from './error/account.already.exists.error'
 import { AccountNotFoundError } from './error/account.not.found.error'
 import { AccessDeniedError } from './error/access.denied.error'
+import { AuthLocalService } from './auth.local.service'
 
 @Controller('/api/auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private authLocalService: AuthLocalService,
+  ) {}
 
   @PublicEndpoint()
   @Post('/local/signUp')
   @HttpCode(HttpStatus.CREATED)
   localSignUp(@Body() credentials: LocalCredentials) {
-    return this.authService.localSignUp(credentials).catch((e) => {
+    return this.authLocalService.signUp(credentials).catch((e) => {
       if (e instanceof AccountAlreadyExistsError) {
         throw new ForbiddenException(e.message)
       }
@@ -38,7 +42,7 @@ export class AuthController {
   @Post('/local/signIn')
   @HttpCode(HttpStatus.OK)
   localSignIn(@Body() credentials: LocalCredentials) {
-    return this.authService.localSignIn(credentials).catch((e) => {
+    return this.authLocalService.signIn(credentials).catch((e) => {
       // TODO: code repetition, maybe extend these errors with nestjs
       if (e instanceof AccountNotFoundError) {
         throw new NotFoundException(e.message)
@@ -55,7 +59,7 @@ export class AuthController {
   @Post('/refresh')
   @HttpCode(HttpStatus.OK)
   refresh(@AuthPayload() auth: AuthInfo) {
-    return this.authService.refreshTokenPair(auth).catch((e) => {
+    return this.authService.refreshTokenPair(auth.refreshToken).catch((e) => {
       if (e instanceof AccountNotFoundError) {
         throw new NotFoundException(e.message)
       }

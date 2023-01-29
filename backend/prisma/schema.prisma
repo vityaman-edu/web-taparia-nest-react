@@ -8,22 +8,44 @@ datasource db {
 }
 
 model Account {
-  id               Int      @id @default(autoincrement())
-  email            String   @unique
-  passwordHash     String
+  id               Int        @id @default(autoincrement())
+  authMethod       AuthMethod
+  externalId       Int
   refreshTokenHash String?
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
   Profile          Profile?
 
+  @@unique([authMethod, externalId])
   @@map("account")
 }
 
+enum AuthMethod {
+  LOCAL
+  YANDEX_ID
+}
+
+model AuthLocal {
+  id           Int    @id @default(autoincrement())
+  email        String @unique
+  passwordHash String
+
+  @@map("auth_local")
+}
+
+model AuthExternal {
+  id     Int        @id
+  method AuthMethod
+  login  String
+
+  @@map("auth_external")
+}
+
 model Profile {
-  account    Account   @relation(fields: [account_id], references: [id])
+  account    Account   @relation(fields: [accountId], references: [id])
   name       String
   pictures   Picture[]
-  account_id Int       @id
+  accountId Int       @id
   taps       Tap[]
 
   @@map("profile")
@@ -31,7 +53,7 @@ model Profile {
 
 model Picture {
   id      Int     @id @default(autoincrement())
-  owner   Profile @relation(fields: [ownerId], references: [account_id])
+  owner   Profile @relation(fields: [ownerId], references: [accountId])
   name    String
   content Json
   taps    Tap[]
@@ -47,7 +69,7 @@ enum TapStatus {
 
 model Tap {
   id        Int       @id @default(autoincrement())
-  owner     Profile   @relation(fields: [ownerId], references: [account_id])
+  owner     Profile   @relation(fields: [ownerId], references: [accountId])
   picture   Picture   @relation(fields: [pictureId], references: [id])
   status    TapStatus
   x         Float

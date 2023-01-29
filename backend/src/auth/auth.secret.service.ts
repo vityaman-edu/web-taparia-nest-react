@@ -31,4 +31,14 @@ export class AuthSecretService {
       }),
     }
   }
+
+  decodeJwt(jwt: string): JwtPayload | null {
+    const payload = this.jwtService.decode(jwt)
+    if (payload != null && typeof payload != 'string') {
+      return {
+        sub: payload.sub,
+      }
+    }
+    return null
+  }
 }

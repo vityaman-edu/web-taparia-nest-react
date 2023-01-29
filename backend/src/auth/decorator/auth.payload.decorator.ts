@@ -10,7 +10,7 @@ export const AuthPayload = createParamDecorator(
     const user = context.switchToHttp().getRequest().user
     return {
       accountId: user['sub'],
-      refreshToken: user['refreshToken'],
+      refreshToken: user['refreshToken']?.replace('Bearer ', '')?.trim(),
     }
   },
 )
