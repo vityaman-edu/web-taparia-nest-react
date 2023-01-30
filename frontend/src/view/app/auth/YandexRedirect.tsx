@@ -19,7 +19,7 @@ export default function YandexRedirect() {
       error: (e) => (
         <b>
           Error:
-          {e.json.message.join ? e.json.message.join(' and ') : e.json.message}
+          {(e && e.json.message.join) ? e.json.message.join(' and ') : e.json.message}
         </b>
       ),
     })
