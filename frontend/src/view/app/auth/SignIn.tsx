@@ -6,6 +6,7 @@ import { globalState } from '../../../state/globalState'
 import { LocalCredentials } from '../../../web/api/dto/local.credentials'
 import Button from '../control/button/Button'
 import './SignIn.scss'
+import YandexSignInButton from './YandexSignInButton'
 
 enum State {
   SignIn,
@@ -94,15 +95,7 @@ const SingIn = () => {
           }
         />
 
-        <Button
-          content="Yandex ID"
-          onClick={() => {
-            const clientId = 'dd47b516d10843ddb0f19fe656cf9fd5'
-            window.location.replace(
-              `https://oauth.yandex.ru/authorize?response_type=token&client_id=${clientId}`,
-            )
-          }}
-        />
+        <YandexSignInButton />
       </div>
     </div>
   )
