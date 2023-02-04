@@ -1,4 +1,12 @@
-# web-taparia-nest-react
+# Taparia: nestjs + react
 
-## Questions
-- What should I use for DTOs: interface, type or class?
+## Build & run
+```bash
+docker compose up
+cd backend
+  npm run start dev
+cd ..
+cd frontend
+  npm run start dev
+cd ..
+```
