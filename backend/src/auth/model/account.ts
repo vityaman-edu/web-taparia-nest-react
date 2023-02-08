@@ -1,6 +1,12 @@
+import { AuthId } from './auth'
+
 export class Account {
   readonly id: number
-  readonly email: string
-  readonly passwordHash: string
+  readonly authId: AuthId
   readonly refreshTokenHash?: string
+}
+
+export class Profile {
+  readonly accountId: number
+  readonly name: string
 }

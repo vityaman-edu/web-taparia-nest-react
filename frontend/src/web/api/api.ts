@@ -29,7 +29,10 @@ export interface Api {
     local: {
       signUp: (credentials: LocalCredentials) => Promise<Tokens>
       signIn: (credentials: LocalCredentials) => Promise<Tokens>
-    }
+    },
+    yandex: {
+      signIn: (token: string) => Promise<Tokens>
+    },
     refresh: () => Promise<Tokens>
     logout: () => Promise<void>
   }

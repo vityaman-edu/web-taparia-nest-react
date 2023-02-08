@@ -5,7 +5,8 @@ import { Provider } from 'react-redux'
 import { Routes, Route, BrowserRouter } from 'react-router-dom'
 import { store } from './state/store'
 import App from './view/app/App'
-import SingIn from './view/app/control/auth/SignIn'
+import SingIn from './view/app/auth/SignIn'
+import YandexRedirect from './view/app/auth/YandexRedirect'
 import { ErrorBoundary } from './view/app/control/ErrorBoundary'
 import './view/css/index.scss'
 
@@ -22,6 +23,7 @@ root.render(
           <Route path="auth/login" element={<SingIn />} />
           <Route path="auth/signIn" element={<SingIn />} />
           <Route path="auth/signUp" element={<SingIn />} />
+          <Route path="auth/yandex/signIn" element={<YandexRedirect />} />
           <Route
             path="app"
             element={

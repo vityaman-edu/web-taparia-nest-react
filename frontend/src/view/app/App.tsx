@@ -7,6 +7,8 @@ import { useAppSelector } from '../../state/hooks'
 import { toast } from 'react-hot-toast'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { globalState } from '../../state/globalState'
+import { Tokens } from '../../web/api/dto/token.pair'
 
 const App = () => {
   const explorerStatus = useAppSelector((state) => state.pictureExplorer.status)
@@ -40,13 +42,19 @@ const App = () => {
               <a href="https://github.com/vityaman">Contact</a>
             </li>
             <li className="nav-inline">
-              <a href=""onClick={async (e) => {
-                e.preventDefault()
-                await api.auth.logout()
-                // TODO: remove token from local storage
-                toast.success('Logged out!')
-                navigate('/auth/logIn')
-              }}>Logout</a>
+              <a
+                href=""
+                onClick={async (e) => {
+                  e.preventDefault()
+                  api.auth.logout().finally(() => {
+                    navigate('/auth/logIn')
+                    globalState.setTokens(new Tokens('', ''))
+                    toast.success('Logged out!')
+                  })
+                }}
+              >
+                Logout
+              </a>
             </li>
           </ul>
         </nav>

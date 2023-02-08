@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
-import { api } from '../../../../state/api'
-import { globalState } from '../../../../state/globalState'
-import { LocalCredentials } from '../../../../web/api/dto/local.credentials'
-import Button from '../button/Button'
+import { api } from '../../../state/api'
+import { globalState } from '../../../state/globalState'
+import { LocalCredentials } from '../../../web/api/dto/local.credentials'
+import Button from '../control/button/Button'
 import './SignIn.scss'
+import YandexSignInButton from './YandexSignInButton'
 
 enum State {
   SignIn,
@@ -29,7 +30,13 @@ const SingIn = () => {
     const tokens = await toast.promise(method(credentials), {
       loading: 'Wait a bit...',
       success: <b>Enjoy!</b>,
-      error: (e) => <b>Oh, chel... {e.json.message.join ? e.json.message.join(' and ') : e.json.message}...</b>,
+      error: (e) => (
+        <b>
+          Oh, chel...{' '}
+          {e.json.message.join ? e.json.message.join(' and ') : e.json.message}
+          ...
+        </b>
+      ),
     })
     globalState.setTokens(tokens)
     navigate('/app')
@@ -51,7 +58,9 @@ const SingIn = () => {
         <input
           style={
             state == State.SignUp &&
-            (password != repeatPassword || password == '' || password.includes(' '))
+            (password != repeatPassword ||
+              password == '' ||
+              password.includes(' '))
               ? { borderColor: '#FF0000' }
               : undefined
           }
@@ -85,6 +94,8 @@ const SingIn = () => {
             setState(state == State.SignIn ? State.SignUp : State.SignIn)
           }
         />
+
+        <YandexSignInButton />
       </div>
     </div>
   )

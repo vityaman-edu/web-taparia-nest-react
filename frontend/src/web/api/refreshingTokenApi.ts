@@ -61,6 +61,12 @@ export class RefreshingTokenApi implements Api {
       signIn: (credentials: LocalCredentials) =>
         this.origin.auth.local.signIn(credentials),
     },
+
+    yandex: {
+      signIn: (token: string) =>
+        this.origin.auth.yandex.signIn(token),
+    },
+
     refresh: () => this.origin.auth.refresh(),
 
     logout: () => this.origin.auth.logout(),
