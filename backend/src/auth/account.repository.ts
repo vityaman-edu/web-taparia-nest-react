@@ -1,52 +1,52 @@
 import { Injectable } from '@nestjs/common'
-import { Prisma } from '@prisma/client'
-import { PrismaKnownErrorCode } from 'src/prisma/prisma.known.error.code'
+import { Account as AccountEntity } from '@prisma/client'
 import { PrismaService } from 'src/prisma/prisma.service'
-import { AccountAlreadyExistsError } from './error/account.already.exists.error'
+import { Account, Profile } from './model/account'
+import { AuthId, authMethodFromString } from './model/auth'
 
 @Injectable()
 export class AccountRepository {
   constructor(private prisma: PrismaService) {}
 
-  create(account: { email: string; passwordHash: string }) {
+  create(authId: AuthId): Promise<Account> {
     return this.prisma.account
       .create({
         data: {
-          email: account.email,
-          passwordHash: account.passwordHash,
+          authMethod: authId.method,
+          externalId: authId.external,
         },
       })
-      .then((account) =>
-        this.prisma.profile
-          .create({
-            data: {
-              name: account.email,
-              account_id: account.id,
-            },
-          })
-          .then(() => account),
-      )
-      .catch((e) => {
-        if (e instanceof Prisma.PrismaClientKnownRequestError) {
-          switch (e.code) {
-            case PrismaKnownErrorCode.UninqueConstaintFailed:
-              throw new AccountAlreadyExistsError(account.email)
-          }
-        }
-        throw e
+      .then(this.convert)
+  }
+
+  async createProfile(profile: Profile): Promise<void> {
+    await this.prisma.profile.create({
+      data: {
+        accountId: profile.accountId,
+        name: profile.name,
+      },
+    })
+  }
+
+  findById(id: number): Promise<Account> {
+    return this.prisma.account
+      .findUnique({
+        where: { id: id },
       })
+      .then(this.convert)
   }
 
-  findByEmail(email: string) {
-    return this.prisma.account.findUnique({
-      where: { email: email },
-    })
-  }
-
-  findById(id: number) {
-    return this.prisma.account.findUnique({
-      where: { id: id },
-    })
+  findByAuthId(id: AuthId): Promise<Account> {
+    return this.prisma.account
+      .findUnique({
+        where: {
+          authMethod_externalId: {
+            authMethod: id.method,
+            externalId: id.external,
+          },
+        },
+      })
+      .then(this.convert)
   }
 
   setRefrestTokenHash(arg: { accountId: number; hash: string }) {
@@ -61,5 +61,17 @@ export class AccountRepository {
       where: { id: accountId },
       data: { refreshTokenHash: null },
     })
+  }
+
+  private convert(entity: AccountEntity | null): Account | null {
+    return entity
+      ? {
+          ...entity,
+          authId: {
+            method: authMethodFromString(entity.authMethod),
+            external: entity.externalId,
+          },
+        }
+      : null
   }
 }

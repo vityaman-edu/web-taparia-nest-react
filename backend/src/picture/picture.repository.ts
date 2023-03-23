@@ -14,7 +14,7 @@ export class PictureRepository {
     return this.prisma.picture
       .create({
         data: {
-          owner: { connect: { account_id: ownerId } },
+          owner: { connect: { accountId: ownerId } },
           name: picture.name,
           content: picture.content as object,
         },
